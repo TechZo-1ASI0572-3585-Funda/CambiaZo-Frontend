@@ -1,0 +1,43 @@
+<h1 class="title-latest-posts">Ultimos Trueques Publicados</h1>
+
+
+<div class="container-search">
+  <mat-form-field class="form-content">
+    <div class="search-wrapper">
+      <mat-icon class="search-icon" style="color: #FFD146">search</mat-icon>
+      <input matInput placeholder="Buscar..." required class="search-input" (input)="searchProduct($event)">
+
+    </div>
+  </mat-form-field>
+</div>
+
+<div class="container-categories">
+  <div class="box-categories">
+    <button mat-button class='chip-category' *ngFor="let category of categories" [routerLink]="['/home/','products&'+category.name]">{{category.name}}</button>
+  </div>
+</div>
+
+<div *ngIf="loading" class="loading-message">
+</div>
+<div *ngIf="!loading" class="container-card">
+  <ng-container *ngFor="let product of items.slice(-28).reverse()" >
+    <mat-card class="example-card" *ngIf="product.available" [routerLink]="['/product-information', product.id]">
+      <div class="container-post-image">
+        <img mat-card-image src="{{product.images[0]}}" alt="Photo Product">
+      </div>
+
+      <div class="location"><mat-icon style="color: #FFD146">place</mat-icon>{{product.location.district}}</div>
+      <mat-card-header>
+        <mat-card-title>{{product.product_name}}</mat-card-title>
+        <mat-card-subtitle>{{product.getCategory}}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p class="description">{{product.description}}</p>
+        <hr>
+        <p class="change-object">{{product.change_for}}</p>
+      </mat-card-content>
+      <mat-card-footer>S/{{product.price}} valor aprox.</mat-card-footer>
+    </mat-card>
+  </ng-container>
+</div>
+

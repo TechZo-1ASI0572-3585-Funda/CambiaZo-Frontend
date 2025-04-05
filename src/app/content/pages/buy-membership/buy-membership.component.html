@@ -1,0 +1,76 @@
+<div class="container">
+  <button mat-button routerLink="/memberships" class="button-back">
+    <div class="back-icon">
+      <mat-icon fontIcon="keyboard_backspace"></mat-icon>
+    </div>
+  </button>
+
+  <form>
+    <div class="row">
+      <div class="col">
+
+        <h2 class="title">Información de la Tarjeta</h2>
+        <mat-card class="inputBox2">
+          <mat-card-header class="cards-img">
+            <img src="./assets/images/icons/card-img.png" alt="" style="width: 30%">
+          </mat-card-header>
+          <mat-card-content>
+            <div class="inputBox2">
+              <span>Número de tarjeta</span>
+              <input class="input-text" type="text" maxlength="16" placeholder="0000 0000 0000 0000" >
+            </div>
+            <div class="inputBox2">
+              <span>Nombre</span>
+              <input  class="input-text" type="text" placeholder="{{user.name}}">
+            </div>
+            <div class="flex-3">
+              <div class="flex">
+                <div class="inputBox2">
+                  <span>Válido Hasta</span>
+                  <div class="flex-2">
+                    <input  class="input-text" type="text" maxlength="2" placeholder="00">
+                    <span style="font-size: 25px; margin-top: 10px; font-weight: lighter">/</span>
+                    <input  class="input-text" type="text" maxlength="2" placeholder="00">
+                  </div>
+                </div>
+                <div class="inputBox2 flex-right">
+                  <div class="flex-4">
+                    <span>Cvv</span>
+                    <input type="password" maxlength="3" placeholder="000">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+
+
+      </div>
+
+      <div class="col">
+        <div class="logo">
+          <img  src="../../../assets/images/logos/logo-2.png" alt="cambiazo-logo" class="img-logo"/>
+        </div>
+
+        <h2 class="title">Datos de Facturación</h2>
+        <HR>
+
+        <p><b>Name:</b> {{user.name}}</p>
+        <p><b>Correo electronico:</b> {{user.email}}</p>
+        <p><b>Numero Telefonico:</b> {{user.phone}}</p>
+        <p><b>Membresia:</b> {{membership.name}}</p>
+        <p><b>A pagar:</b> ${{membership.price}}</p>
+        <input type="button" class="submit-btn" (click)="buyMembership()" value="Pagar">
+
+
+      </div>
+
+    </div>
+
+
+
+
+  </form>
+
+</div>

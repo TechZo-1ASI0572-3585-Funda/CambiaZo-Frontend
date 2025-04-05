@@ -1,0 +1,57 @@
+<div class="container">
+  <div class="search-by-category">
+    <h1>Categorías</h1>
+      <div class="box-categories">
+        <button mat-button class='chip-category' *ngFor="let category of categories"  (click)="filterProducts(category.name)" [routerLink]="['/home/','products&'+category.name]">{{category.name}}</button>
+      </div>
+  </div>
+
+
+  <div class="search-by-information">
+    <form [formGroup]="formProduct" (ngSubmit)="onSubmit()">
+    <h1>Buscar</h1>
+    <section>
+      <mat-label>Palabra Clave</mat-label>
+      <input matInput formControlName="wordKey" placeholder="Buscar..." class="search-input" >
+    </section>
+
+    <section>
+      <mat-label>Ubicacion</mat-label>
+
+      <select formControlName="countries" (change)="onCountrySelectionChange()">
+        <option [ngValue]="null" selected [hidden]="!formProduct.value.countries">{{!formProduct.value.countries ? 'Seleccionar un pais' : '..'}}</option>
+        <option *ngFor="let country of countries" [ngValue]='country.country'>{{country.country}}</option>
+      </select>
+
+      <select formControlName="departments"  (change)="onCitiesSelectionChange()">
+        <option   [ngValue]="null" selected [hidden]="!formProduct.value.departments">{{!formProduct.value.departments ? 'Seleccionar un departamento' : '..'}}</option>
+        <option *ngIf="!departments.length" disabled>No hay departamentos disponibles</option>
+        <option  *ngFor="let departments of departments" [ngValue]='departments.name'>{{ departments.name }}</option>
+      </select>
+
+      <select formControlName="cities" class="search-input" >
+        <option  [ngValue]="null" selected [hidden]="!formProduct.value.cities">{{!formProduct.value.cities ? 'Seleccionar un distrito' : '..'}}</option>
+        <option *ngIf="!cities.length" disabled>No hay ciudades disponibles</option>
+        <option *ngFor="let city of cities" [ngValue]='city'>{{city}}</option>
+
+      </select>
+    </section>
+    <section>
+      <mat-label>Valor aproximado</mat-label>
+      <div class="range-price">
+        <input type="number"  placeholder="min" formControlName="priceMin" (beforeinput)="validateInput($event)">
+        <div class="box-icon"><mat-icon> compare_arrows</mat-icon></div>
+        <input type="number"  placeholder="máx" formControlName="priceMax" (beforeinput)="validateInput($event)">
+      </div>
+    </section>
+
+      <section class="btn-actions">
+      <button class="btn-search">Buscar</button>
+      <button (click)="onClear()" class="btn-clear">Reiniciar</button>
+      </section>
+
+    </form>
+  </div>
+</div>
+
+

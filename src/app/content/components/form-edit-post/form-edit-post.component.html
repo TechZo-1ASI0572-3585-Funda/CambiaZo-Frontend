@@ -1,0 +1,84 @@
+<div class="dialog__container">
+    <div class="dialog-title__container" mat-dialog-title>
+      <h1 class="dialog__title">Editar</h1>
+    </div>
+
+    <div class="dialog-content" mat-dialog-content>
+      <div class="high__content">
+        <form  [formGroup]="contactFormGroup" class="high__left">
+          <h1 class="contact__title">Datos de Contacto</h1>
+          <label class="label" for="name">Nombre</label>
+          <input class="text__input" type="text" id="name" formControlName="name" placeholder="{{ user?.name }}" required>
+          <label class="label" for="name">Correo Electronico</label>
+          <input class="text__input" type="text" id="email" formControlName="email" placeholder="{{ user?.email }}" required>
+          <label class="label" for="name">Telefono</label>
+          <input class="text__input" type="text" id="telephone" formControlName="telephone" placeholder="{{ user?.phone }}" required>
+          <label class="label" for="pais">Pais</label>
+          <select id="pais" formControlName="pais" class="text__selected">
+            <option *ngFor="let country of countries">{{country.country}}</option>
+          </select>
+          <label class="label" for="provincia">Provincia</label>
+          <select id="provincia" formControlName="provincia" class="text__selected" (change)="onChangeDepartment()">
+            <option  *ngFor="let department of departments">{{department.name}}</option>
+          </select>
+          <label class="label" for="distrito">Distrito</label>
+          <select id="distrito" formControlName="distrito" class="text__selected">
+            <option>...</option>
+            <option *ngFor="let district of districts" >{{district}}</option>
+          </select>
+        </form>
+
+        <form [formGroup]="postFormGroup" class="high__right">
+          <h1 class="contact__title">Información de tu Publicación</h1>
+          <label class="label1" for="category">Categoría</label>
+          <select id="category" formControlName="category" class="text__selected1" (change)="setCategory()">
+            <option>...</option>
+            <option *ngFor="let category of categories" >{{category.name}}</option>
+          </select>
+          <label class="label1" for="product_name">Producto</label>
+          <input class="text__input" type="text" id="product_name" formControlName="product_name" placeholder="{{postC?.product_name}}" required>
+          <label class="label1" for="description">Describe tu producto</label>
+          <textarea class="text__box" type="text" id="description" formControlName="description" placeholder="{{postC?.description}}" required></textarea>
+          <label class="label1" for="change_for">¿Que quieres a Cambio</label>
+          <textarea class="text__box" type="text" id="change_for" formControlName="change_for" placeholder="{{postC?.change_for}}" required></textarea>
+          <label class="label1" >Valor Aproximado</label>
+          <div class="aprox-value">
+            <span class="sol__simbol">S/</span>
+            <input placeholder="{{postC?.price}}" class="value-sol" type="number" required formControlName="price" min="0" value="{{postC?.price}}" step="0.1">
+          </div>
+        </form>
+
+
+      </div>
+
+
+      <div class="low__content">
+        <div class="low__left">
+          <div class="left__first">
+            <div class="left-first-text">
+              <img src="./assets/images/icons/rocket.svg">
+              <h1 class="boost__title">Boost de Visibilidad</h1>
+              <input [formControl]="boost"  type="checkbox" checked="{{postC.boost==true}}" />
+            </div>
+            <p class="boost__paragraph">¡Activa tu boost! Al hacerlo, tu producto será destacado en la página principal durante un dia, aumentando tus oportunidades de encontrar un intercambiador</p>
+          </div>
+          <div class="left__second">
+            <button class="submit"  (click)="saveChanges()">Editar</button>
+          </div>
+        </div>
+        <div class="low__right">
+          <h1 class="right__title">Imágenes</h1>
+          <p class="right__paragraph">Imagenes 1/8 - Puedes agregar un maximo de 8 fotos</p>
+          <div class="img__container">
+            <img *ngFor="let image of images" src="{{image}}" style="width: 100px">
+            <label for="file-upload" class="custom-file-upload">
+              <input id="file-upload" type="file" (change)="onselect($event)" multiple/> <!-- (change)="onselect($event)" -->
+              +
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+
