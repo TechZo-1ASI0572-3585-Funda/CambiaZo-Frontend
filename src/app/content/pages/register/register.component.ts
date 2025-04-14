@@ -106,6 +106,8 @@ export class RegisterComponent {
           console.error('Error registering user:', error);
         }
       );
+
+      window.location.href = '/login';
     } else {
     }
   }
