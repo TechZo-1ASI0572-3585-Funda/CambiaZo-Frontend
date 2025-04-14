@@ -88,15 +88,17 @@ export class RegisterComponent {
   addUser() {
     if (this.registerForm.valid) {
       const newUser = {
-        name: this.registerForm.value.name,
-        email: this.registerForm.value.email,
-        phone: this.registerForm.value.tel,
+        username: this.registerForm.value.email,
         password: this.registerForm.value.contrasenia,
-        membershipId: 1,
-        profilePicture: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6lqpQj3oAmc1gtyM78oJCbTaDrD7Fj9NRlceOPDZiHA&s"
+        name: this.registerForm.value.name,
+        phoneNumber: this.registerForm.value.tel,
+        profilePicture: "https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png",
+        isGoogleAccount: false,
+        roles: ["ROLE_USER"]
       };
 
-      this.usersService.postUser(newUser).subscribe(
+
+      this.usersService.register(newUser).subscribe(
         response => {
           this.register();
         },
