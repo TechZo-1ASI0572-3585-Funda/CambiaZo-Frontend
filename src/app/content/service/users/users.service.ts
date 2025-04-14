@@ -116,7 +116,7 @@ export class UsersService {
   }
 
   changeProfileImage(id: number, data: any): Observable<any> {
-    return this.http.put(`${this.baseUrl}/api/v2/users/edit/${id}`, data).pipe(
+    return this.http.put(`${this.baseUrl}/api/v2/users/edit/profile/${id}`, data).pipe(
       catchError(this.handleError)
     );
   }
@@ -136,11 +136,14 @@ export class UsersService {
     return new Users(
       data.id,
       data.name,
-      data.email,
-      data.phone,
+      data.username,
+      data.phoneNumber,
       data.password,
       data.membershipId,
       data.profilePicture,
+      data.isActive,
+      data.isGoogleAccount,
+      data.roles,
       [] // Assuming favorites need to be handled separately or added later
     );
   }
@@ -148,10 +151,13 @@ export class UsersService {
   private transformToNewStructure(data: any): any {
     return {
       name: data.name,
-      email: data.email,
-      phone: data.phone,
+      username: data.username,
+      phoneNumber: data.phoneNumber,
       password: data.password,
       profilePicture: data.profilePicture, // Ensure the key names match the backend structure
+      isActive: data.isActive,
+      isGoogleAccount: data.isGoogleAccount,
+      roles: data.roles,
       membershipId: data.membershipId
     };
   }
