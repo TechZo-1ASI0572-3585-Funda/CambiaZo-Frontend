@@ -113,11 +113,11 @@
               </div>
 
               <button mat-button type="button" (click)="onChangePassword()" class="button">
-                <b>Cambiar Contraseña</b>
+                Cambiar Contraseña
               </button>
 
               <button mat-button type="button" (click)="forgotPassword()" class="button-change-password">
-                <span><b>Olvidé mi contraseña</b></span>
+                <span>Olvidé mi contraseña</span>
               </button>
 
             </form>
@@ -128,7 +128,7 @@
           <button mat-button type="button" (click)="closeSession()" class="button-close-session">
             <div class="close-session">
               <mat-icon fontIcon="exit_to_app"></mat-icon>
-              <span>Cerrar Sesión</span>
+              <span class="white">Cerrar Sesión</span>
             </div>
           </button>
 
@@ -142,7 +142,7 @@
                   <p class="membership-name">{{ membership.name }}</p>
                   <p  class="membership-price" *ngIf="membership.price === 0; else priceSection">GRATIS</p>
                   <ng-template #priceSection>
-                    <p class="membership-price">${{ membership.price }}<span class="info-price">c/mes</span></p>
+                    <p class="membership-price"><span class="yellow">$ &nbsp;</span>{{ membership.price }}<span class="info-price">c/mes</span></p>
                   </ng-template>
                 </mat-card-subtitle>
               </mat-card-content>
