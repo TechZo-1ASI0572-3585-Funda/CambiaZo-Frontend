@@ -28,21 +28,22 @@ export class UsersService {
   constructor(private http: HttpClient) {}
 
   login(data: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/api/v2/authentication/sign-in`, {
-      username: data.username,
-      password: data.password
-    }).pipe(
+    return this.http.post(`${this.baseUrl}/api/v2/authentication/sign-in`, data).pipe(
       map((res: any) => {
-        localStorage.setItem('token', res.token);
-        localStorage.setItem('id', res.id);
-        return true;
+        localStorage.setItem('token', res.token)
+        localStorage.setItem('id', res.id)
+        return res
       }),
       catchError(err => {
-        if (err.status === 404) return of('user');
-        if (err.status === 401) return of('password');
-        return this.handleError(err);
+        if (err.status === 404) return of('user')
+        if (err.status === 401) return of('password')
+        return this.handleError(err)
       })
-    );
+    )
+  }
+
+  getUserByUsername(username: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/api/v2/users/username/${username}`);
   }
 
   verifyEmail(data: any): Observable<boolean> {
@@ -91,7 +92,7 @@ export class UsersService {
   putUser(id: any, data: any): Observable<any> {
     const transformedData = this.transformToNewStructure(data);
 
-    return this.http.put(`${this.baseUrl}/api/v2/users/edit/${id}`, transformedData).pipe(
+    return this.http.put(`${this.baseUrl}/api/v2/users/edit/profile/${id}`, transformedData).pipe(
       catchError(this.handleError)
     );
   }

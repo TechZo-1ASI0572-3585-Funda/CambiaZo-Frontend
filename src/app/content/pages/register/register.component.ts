@@ -13,6 +13,7 @@ import {NgClass, NgIf} from "@angular/common";
 import {MatIcon} from "@angular/material/icon";
 import {MatInput} from "@angular/material/input";
 import { UsersService } from "../../service/users/users.service";
+import {AuthGoogleService} from "../../service/auth-google/auth-google.service";
 
 @Component({
   selector: 'app-register',
@@ -22,14 +23,9 @@ import { UsersService } from "../../service/users/users.service";
     FooterContent2Component,
     MatLabel,
     MatButtonModule,
-    RouterLinkActive,
     RouterLink,
     ReactiveFormsModule,
-    NgClass,
     NgIf,
-    MatFormField,
-    MatIcon,
-    MatInput,
     MatSuffix
   ],
   templateUrl: './register.component.html',
@@ -67,6 +63,7 @@ export class RegisterComponent {
   constructor(
     private formBuilder: FormBuilder,
     private dialog: MatDialog,
+    private authGoogleService: AuthGoogleService,
     private usersService: UsersService
   ) {}
 
@@ -82,6 +79,63 @@ export class RegisterComponent {
 
   register(){
     this.dialog.open(DialogRegisterSuccessfullyComponent, {
+    });
+  }
+
+  registerWithGoogle() {
+    this.authGoogleService.loginWithGoogle().then(userCredential => {
+      const user = userCredential.user;
+      const email = user.email;
+
+      if (!email) {
+        console.error('El correo de Google es inválido o no está disponible.');
+        return;
+      }
+
+      const password = this.authGoogleService.googlePassword;
+      const newUser = {
+        username: email,
+        name: user.displayName,
+        password,
+        phoneNumber: user.phoneNumber || '',
+        profilePicture: user.photoURL,
+        isGoogleAccount: true,
+        roles: ["ROLE_USER"]
+      };
+
+      this.usersService.getUserByUsername(email).subscribe({
+        next: () => {
+          this.usersService.login({ username: email, password }).subscribe({
+            next: (response: any) => {
+              localStorage.setItem('token', response.token);
+              window.location.href = '/home';
+            },
+            error: err => {
+              console.error('Login failed:', err);
+            }
+          });
+        },
+        error: () => {
+          this.usersService.register(newUser).subscribe({
+            next: () => {
+              this.usersService.login({ username: email, password }).subscribe({
+                next: (response: any) => {
+                  localStorage.setItem('token', response.token);
+                  window.location.href = '/home';
+                },
+                error: err => {
+                  console.error('Login after register failed:', err);
+                }
+              });
+            },
+            error: err => {
+              console.error('Error registering user:', err);
+            }
+          });
+        }
+      });
+    }).catch(error => {
+      console.error('Google Sign-In Error:', error);
     });
   }
 
