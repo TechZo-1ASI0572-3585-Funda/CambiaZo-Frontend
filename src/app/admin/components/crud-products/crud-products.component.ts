@@ -26,7 +26,7 @@ export class CrudProductsComponent implements OnInit{
   }
 
   getAllProducts(){
-    this.postService.getProducs().subscribe((res:any)=>{
+    this.postService.getProducts().subscribe((res:any)=>{
       this.dataSource = res
       console.log(res)
     })

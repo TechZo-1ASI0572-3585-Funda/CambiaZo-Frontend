@@ -1,24 +1,15 @@
-import {Component, ViewChild} from '@angular/core';
-import {
-  CreatePostInfoUserContentComponent
-} from "../../components/create-post-info-user-content/create-post-info-user-content.component";
-import {
-  CreateInfoPostContentComponent
-} from "../../components/create-info-post-content/create-info-post-content.component";
-import {MatFormField} from "@angular/material/form-field";
-import {MatIcon} from "@angular/material/icon";
-import {MatInput} from "@angular/material/input";
-import {MatButton} from "@angular/material/button";
-import {Products} from "../../model/products/products.model";
-import {PostsService} from "../../service/posts/posts.service";
-import {
-  DialogRegisterSuccessfullyComponent
-} from "../../components/dialog-register-successfully/dialog-register-successfully.component";
-import {MatDialog} from "@angular/material/dialog";
-import {
-  DialogSuccessfullyPostComponent
-} from "../../../public/components/dialog-successfully-post/dialog-successfully-post.component";
-import {Router} from "@angular/router";
+// post.component.ts
+import { Component, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+import { MatFormField } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
+import { MatInput } from '@angular/material/input';
+import { MatButton } from '@angular/material/button';
+import { PostsService } from '../../service/posts/posts.service';
+import { MatDialog } from '@angular/material/dialog';
+import { CreatePostInfoUserContentComponent } from '../../components/create-post-info-user-content/create-post-info-user-content.component';
+import { CreateInfoPostContentComponent } from '../../components/create-info-post-content/create-info-post-content.component';
+import { DialogSuccessfullyPostComponent } from '../../../public/components/dialog-successfully-post/dialog-successfully-post.component';
 
 @Component({
   selector: 'app-post',
@@ -26,54 +17,44 @@ import {Router} from "@angular/router";
   imports: [
     CreatePostInfoUserContentComponent,
     CreateInfoPostContentComponent,
-    MatFormField,
-    MatIcon,
-    MatInput,
     MatButton
   ],
   templateUrl: './post.component.html',
-  styleUrl: './post.component.css'
+  styleUrls: ['./post.component.css']
 })
 export class PostComponent {
+  @ViewChild(CreatePostInfoUserContentComponent) createPostInfoUserContentComponent!: CreatePostInfoUserContentComponent;
+  @ViewChild(CreateInfoPostContentComponent) createInfoPostContentComponent!: CreateInfoPostContentComponent;
 
-  imageDefault='https://media.istockphoto.com/id/1472933890/es/vector/no-hay-s%C3%ADmbolo-vectorial-de-imagen-falta-el-icono-disponible-no-hay-galer%C3%ADa-para-este.jpg?s=612x612&w=0&k=20&c=fTxCETonJ20MRRE6DFU9pbGws6e7sa1uySP49wU372I='
+  imageDefault = 'https://media.istockphoto.com/id/1472933890/es/vector/no-hay-s%C3%ADmbolo-vectorial-de-imagen-falta-el-icono-disponible-no-hay-galer%C3%ADa-para-este.jpg';
 
   constructor(
     private productsService: PostsService,
     private dialog: MatDialog,
-    private router: Router,
-  ) {
-  }
-  @ViewChild(CreatePostInfoUserContentComponent)createPostInfoUserContentComponent!:CreatePostInfoUserContentComponent;
-  @ViewChild(CreateInfoPostContentComponent)createInfoPostContentComponent!:CreateInfoPostContentComponent;
+    private router: Router
+  ) {}
 
-  onPost(){
-    const infoProduct = this.createInfoPostContentComponent.onSubmit()
-    const contactProduct = this.createPostInfoUserContentComponent.onSubmit()
-
-    if(infoProduct && contactProduct){
-      this.createInfoPostContentComponent.uploadImage().then((images:string[]) => {
-
-      const newProduct =
-        {
-          user_id: localStorage.getItem('id') || 'default',
+  onPost(): void {
+    const infoProduct = this.createInfoPostContentComponent.onSubmit();
+    const contactProduct = this.createPostInfoUserContentComponent.onSubmit();
+    if (infoProduct && contactProduct) {
+      this.createInfoPostContentComponent.uploadImage().then((images: string[]) => {
+        const newProduct = {
+          user_id: localStorage.getItem('id') ?? 'default',
           ...infoProduct,
-          'images':!images.length ? [this.imageDefault] : images,
-          'boost': contactProduct.boost,
-          'location':{
-            'country': contactProduct.country,
-            'departament':contactProduct.departament,
-            'district': contactProduct.district
-            }
-        }
-      this.productsService.postProduct(newProduct).subscribe()
-      })
-      const dialogRef = this.dialog.open(DialogSuccessfullyPostComponent);
-      dialogRef.afterClosed().subscribe(result => {
-        this.router.navigateByUrl('/home');
+          images: images.length ? images : [this.imageDefault],
+          boost: contactProduct.boost,
+          location: {
+            country: contactProduct.country,
+            department: contactProduct.department,
+            district: contactProduct.district
+          }
+        };
+        this.productsService.postProduct(newProduct).subscribe(() => {
+          const ref = this.dialog.open(DialogSuccessfullyPostComponent);
+          ref.afterClosed().subscribe(() => this.router.navigateByUrl('/home'));
+        });
       });
     }
   }
-
-
 }

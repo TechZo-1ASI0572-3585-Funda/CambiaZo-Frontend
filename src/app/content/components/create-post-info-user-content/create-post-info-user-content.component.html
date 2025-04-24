@@ -1,15 +1,20 @@
 <form [formGroup]="formProduct">
-
   <section class="section-1">
     <h1 class="title">Datos de Contacto</h1>
-    <mat-label>Nombre</mat-label><input matInput [value]="user?.name" disabled>
-    <mat-label>Correo electronico</mat-label><input matInput [value]="user?.username" disabled>
-    <mat-label>Telefono</mat-label><input matInput [value]="user?.phoneNumber" disabled><br>
 
-    <mat-label>Pais</mat-label>
-    <select formControlName="country" (change)="onCountrySelectionChange()">
+    <mat-label>Nombre</mat-label>
+    <input matInput [value]="user?.name" disabled>
+
+    <mat-label>Correo electrónico</mat-label>
+    <input matInput [value]="user?.username" disabled>
+
+    <mat-label>Teléfono</mat-label>
+    <input matInput [value]="user?.phoneNumber" disabled><br>
+
+    <mat-label>País</mat-label>
+    <select formControlName="country" (change)="onCountryChange()">
       <option [ngValue]="null" selected [hidden]="!formProduct.value.country">{{!formProduct.value.country ? '' : '..'}}</option>
-      <option *ngFor="let country of countries" [ngValue]='country.country'>{{country.country}}</option>
+      <option *ngFor="let country of countries" [ngValue]="country.name">{{country.name}}</option>
     </select>
     <div>
       <span *ngIf="formProduct.get('country')?.invalid && formProduct.get('country')?.touched">
@@ -18,48 +23,48 @@
     </div>
 
     <mat-label>Departamentos</mat-label>
-    <select formControlName="departament"  (change)="onCitiesSelectionChange()">
-      <option   [ngValue]="null" selected [hidden]="!formProduct.value.departament">{{!formProduct.value.departament ? '' : '..'}}</option>
+    <select formControlName="department" (change)="onDepartmentChange()">
+      <option [ngValue]="null" selected [hidden]="!formProduct.value.department">{{!formProduct.value.department ? '' : '..'}}</option>
       <option *ngIf="!departments.length" disabled>No hay departamentos disponibles</option>
-      <option  *ngFor="let department of departments" [ngValue]='department.name'>{{ department.name }}</option>
+      <option *ngFor="let department of departments" [ngValue]="department.name">{{ department.name }}</option>
     </select>
     <div>
-      <span *ngIf="formProduct.get('departament')?.invalid && formProduct.get('departament')?.touched">
-      *Seleccion requerida
-    </span>
+      <span *ngIf="formProduct.get('department')?.invalid && formProduct.get('department')?.touched">
+        *Seleccion requerida
+      </span>
     </div>
 
     <mat-label>Ciudades</mat-label>
-    <select formControlName="district" class="search-input" >
-      <option  [ngValue]="null" selected [hidden]="!formProduct.value.district">{{!formProduct.value.district ? '' : '..'}}</option>
+    <select formControlName="district">
+      <option [ngValue]="null" selected [hidden]="!formProduct.value.district">{{!formProduct.value.district ? '' : '..'}}</option>
       <option *ngIf="!cities.length" disabled>No hay ciudades disponibles</option>
-      <option *ngFor="let city of cities" [ngValue]='city'>{{city}}</option>
+      <option *ngFor="let city of cities" [ngValue]="city">{{city}}</option>
     </select>
     <div>
-    <span *ngIf="formProduct.get('district')?.invalid && formProduct.get('district')?.touched">
-      *Seleccion requerida
-    </span>
+      <span *ngIf="formProduct.get('district')?.invalid && formProduct.get('district')?.touched">
+        *Seleccion requerida
+      </span>
     </div>
 
     <span class="box-policy">
-    <mat-checkbox [formControl]="acceptPolicy"></mat-checkbox>
-    <mat-label>Acepto la <a routerLink="/privacy-policy">Politica de Privacidad</a></mat-label>
+      <mat-checkbox [formControl]="acceptPolicy"></mat-checkbox>
+      <mat-label>Acepto la <a routerLink="/privacy-policy">Politica de Privacidad</a></mat-label>
     </span>
     <div>
-    <span *ngIf="acceptPolicy.invalid && acceptPolicy.touched">
-      *Confirma los terminos
-    </span>
+      <span *ngIf="acceptPolicy.invalid && acceptPolicy.touched">
+        *Confirma los términos
+      </span>
     </div>
   </section>
 
-
-  <section class="section-2" *ngIf="user?.membership != 1">
-    <div class="box-boost"><mat-label>Boost de Visibilidad</mat-label><mat-slide-toggle formControlName="boost"></mat-slide-toggle></div>
+  <section class="section-2" *ngIf="user && (+user.membership !== 1)">
+    <div class="box-boost">
+      <mat-label>Boost de Visibilidad</mat-label>
+      <mat-slide-toggle formControlName="boost"></mat-slide-toggle>
+    </div>
     <br>
-    <p>Activa tu boost! Al hacerlo, tu producto sera
-      destacado en la pagina principal durante un
-      dia, aumentando tus oportunidades de
-      encontrar un intercambiador</p>
+    <p>
+      Activa tu boost! Al hacerlo, tu producto será destacado en la página principal durante un día, aumentando tus oportunidades de encontrar un intercambiador.
+    </p>
   </section>
-
 </form>

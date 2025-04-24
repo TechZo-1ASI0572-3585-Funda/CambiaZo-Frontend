@@ -25,7 +25,7 @@ export class FeaturePostsContentComponent implements OnInit {
   }
 
   getAllFeaturePosts() {
-    this.postsService.getProducs().pipe(
+    this.postsService.getProducts().pipe(
       switchMap(products => {
         const categoryRequests: { [key: string]: Observable<any> } = {};
 

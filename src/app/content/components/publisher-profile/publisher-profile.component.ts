@@ -96,7 +96,7 @@ export class PublisherProfileComponent implements OnInit {
   }
 
   loadUserProducts(userId: string): void {
-    this.postsService.getProducs().subscribe((products: Products[]) => {
+    this.postsService.getProducts().subscribe((products: Products[]) => {
       this.userProducts = products.filter(product => product.user_id === userId);
     });
   }

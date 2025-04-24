@@ -1,16 +1,15 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {MatFormFieldModule} from "@angular/material/form-field";
-import {MatInputModule} from "@angular/material/input";
-import {MatButtonModule} from "@angular/material/button";
-import {MatOption, MatSelect} from "@angular/material/select";
-import {MatSlideToggle} from "@angular/material/slide-toggle";
-import {JsonPipe, NgForOf, NgIf} from "@angular/common";
-import {PostsService} from "../../service/posts/posts.service";
-import {CategoriesObjects} from "../../model/categories-objects/categories-objects.model";
-import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import { Component, Input, OnInit } from '@angular/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatIconModule } from '@angular/material/icon';
+import { NgForOf, NgIf, JsonPipe } from '@angular/common';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgxDropzoneModule } from 'ngx-dropzone';
-import {MatIcon} from "@angular/material/icon";
-
+import { PostsService } from '../../service/posts/posts.service';
+import { CategoriesObjects } from '../../model/categories-objects/categories-objects.model';
 
 @Component({
   selector: 'app-create-info-post-content',
@@ -19,150 +18,98 @@ import {MatIcon} from "@angular/material/icon";
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatSelect,
-    MatOption,
-    MatSlideToggle,
+    MatSelectModule,
+    MatSlideToggleModule,
+    MatIconModule,
     NgForOf,
-    ReactiveFormsModule,
     NgIf,
-    JsonPipe,
-    NgxDropzoneModule,
-    MatIcon
+    ReactiveFormsModule,
+    NgxDropzoneModule
   ],
   templateUrl: './create-info-post-content.component.html',
-  styleUrl: './create-info-post-content.component.css'
+  styleUrls: ['./create-info-post-content.component.css']
 })
-export class CreateInfoPostContentComponent implements OnInit{
+export class CreateInfoPostContentComponent implements OnInit {
+  @Input() category_id: string | null = null;
+  @Input() product_name: string | null = null;
+  @Input() description: string | null = null;
+  @Input() change_for: string | null = null;
+  @Input() price: number | null = null;
+  @Input() images: string[] = [];
 
-  @Input() category_id= null;
-  @Input() product_name = null;
-  @Input() description = null;
-  @Input() change_for = null;
-  @Input() price = null;
-  @Input() images = [];
-
-
-  categories: CategoriesObjects[]=[]
-  imagesUrl: string[] = [];
+  categories: CategoriesObjects[] = [];
   files: File[] = [];
-  maxFiles: number = 4;
-  totalFiles: number = 0;
+  imagesUrl: string[] = [];
+  maxFiles = 4;
+  totalFiles = 0;
 
   formProduct = new FormGroup({
-    'category_id': new FormControl(null, Validators.required),
-    'product_name': new FormControl(null, Validators.required),
-    'description': new FormControl(null, Validators.required),
-    'change_for': new FormControl(null, Validators.required),
-    'price': new FormControl(null, Validators.required),
-    }
-  )
-  constructor(private postService:PostsService) {
+    category_id: new FormControl<string | null>(null, Validators.required),
+    product_name: new FormControl<string | null>(null, Validators.required),
+    description: new FormControl<string | null>(null, Validators.required),
+    change_for: new FormControl<string | null>(null, Validators.required),
+    price: new FormControl<number | null>(null, Validators.required)
+  });
+
+  constructor(private postService: PostsService) {}
+
+  ngOnInit(): void {
+    this.formProduct.patchValue({
+      category_id: this.category_id,
+      product_name: this.product_name,
+      description: this.description,
+      change_for: this.change_for,
+      price: this.price
+    });
+
+    this.totalFiles = this.images.length;
+    this.postService.getCategoriesProducts().subscribe(res => {
+      this.categories = res.map(cat => ({ ...cat, id: cat.id.toString() }));
+    });
   }
 
-  ngOnInit() {
-
-    this.formProduct = new FormGroup({
-        'category_id': new FormControl(this.category_id, Validators.required),
-        'product_name': new FormControl(this.product_name, Validators.required),
-        'description': new FormControl(this.description, Validators.required),
-        'change_for': new FormControl(this.change_for, Validators.required),
-        'price': new FormControl(this.price, Validators.required),
-      }
-    )
-
-    this.totalFiles = this.images.length
-
-    this.getCategoriesPostOptions()
-    this.formProduct.get('product_name')?.valueChanges.subscribe(value => {
-      if (value === '') {
-        this.formProduct.get('product_name')?.setValue(null, { emitEvent: false });
-      }
-    });
-    this.formProduct.get('description')?.valueChanges.subscribe(value => {
-      if (value === '') {
-        this.formProduct.get('description')?.setValue(null, { emitEvent: false });
-      }
-    });
-    this.formProduct.get('change_for')?.valueChanges.subscribe(value => {
-      if (value === '') {
-        this.formProduct.get('change_for')?.setValue(null, { emitEvent: false });
-      }
-    });
-
-  }
-
-
-
-  getCategoriesPostOptions(){
-    this.postService.getCategoriesProducts().subscribe(res=> {
-        this.categories = res
-        this.categories.map((category:any) => {
-          category.id = category.id.toString()
-          return category
-        })
-
-
-      },error => console.log(error)
-    )};
-
-
-
-
-  onSubmit() {
+  onSubmit(): any {
     this.formProduct.markAllAsTouched();
-    if (this.formProduct.valid) {
-      return this.formProduct.value;
-    }else return null
+    return this.formProduct.valid ? this.formProduct.value : null;
   }
 
-  errorLimitFiles = false
-  onSelect(event: any) {
-    const totals = this.totalFiles + event.addedFiles.length;
-
-    if (totals <= this.maxFiles) {
+  onSelect(event: any): void {
+    const nuevos = this.totalFiles + event.addedFiles.length;
+    if (nuevos <= this.maxFiles) {
       this.files.push(...event.addedFiles);
-      this.totalFiles += event.addedFiles.length
-      this.errorLimitFiles = false;
+      this.totalFiles = nuevos;
     } else {
-      const allowedFiles = this.maxFiles - this.totalFiles;
-      this.files.push(...event.addedFiles.slice(0, allowedFiles));
-      this.totalFiles += allowedFiles
-      this.errorLimitFiles = true
-    }
-
-  }
-
-  onRemove(event: any) {
-    this.files.splice(this.files.indexOf(event), 1);
-    this.totalFiles -= 1
-    if (this.files.length < this.maxFiles && this.errorLimitFiles) {
-      this.errorLimitFiles = false;
+      const resto = this.maxFiles - this.totalFiles;
+      this.files.push(...event.addedFiles.slice(0, resto));
+      this.totalFiles = this.maxFiles;
     }
   }
 
-
-  async uploadImage() {
-     const api = "https://api.imgbb.com/1/upload?expiration=300&key=e20a8b081ea288c51254cd9dca20515c&name="
-      for (let file of this.files){
-        const url = api + file.name
-        const data = new FormData();
-        data?.append('image', file);
-
-        try {
-
-          const response = await fetch(url, {method: 'post',body: data});
-          const responseData = await response.json();
-          this.imagesUrl.push(responseData.data.url);
-        } catch (error) {
-          console.error(error);
-        }
-      }
-      if(!this.imagesUrl.length)return []
-       return this.imagesUrl
+  onRemove(file: File): void {
+    const i = this.files.indexOf(file);
+    if (i >= 0) {
+      this.files.splice(i, 1);
+      this.totalFiles--;
+    }
   }
 
-  validateInput(event:any) {
-    if (event.data === '-' || event.data === '+')event.preventDefault();
+  validateInput(event: InputEvent): void {
+    if (event.data === '-' || event.data === '+') event.preventDefault();
   }
 
+  async uploadImage(): Promise<string[]> {
+    this.imagesUrl = [];
+    const apiKey = 'e20a8b081ea288c51254cd9dca20515c';
+    for (const file of this.files) {
+      const data = new FormData();
+      data.append('image', file);
+      const response = await fetch(
+        `https://api.imgbb.com/1/upload?expiration=300&key=${apiKey}&name=${file.name}`,
+        { method: 'POST', body: data }
+      );
+      const json = await response.json();
+      this.imagesUrl.push(json.data.url);
+    }
+    return this.imagesUrl;
+  }
 }
