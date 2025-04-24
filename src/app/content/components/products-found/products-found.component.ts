@@ -74,7 +74,7 @@ export class ProductsFoundComponent implements OnInit{
 
 
   getAllProducts() {
-    this.postService.getProducs().subscribe((res: any) => {
+    this.postService.getProducts().subscribe((res: any) => {
       res.forEach((product: any) => {
         this.allProducts.push(new Products(
           String(product.id),

@@ -17,16 +17,12 @@ import { DialogOfferSuccessfulComponent} from "../dialog-offer-successful/dialog
   selector: 'app-dialog-select-product',
   standalone: true,
   imports: [
-    MatDialogTitle,
     MatDialogContent,
-    MatDialogActions,
     MatButtonModule,
-    MatDialogClose,
     MatIconModule,
     CommonModule,
     MatCardModule,
     NgForOf,
-    NgIf
   ],
   templateUrl: './dialog-select-product.component.html',
   styleUrls: ['./dialog-select-product.component.css']
@@ -57,7 +53,7 @@ export class DialogSelectProductComponent implements OnInit {
   }
 
   getUserProducts(): void {
-    this.postService.getProducs().subscribe((res: any) => {
+    this.postService.getProducts().subscribe((res: any) => {
       res.forEach((product: any) => {
         if (product.user_id === this.user.id) {
           this.items.push(new Products(

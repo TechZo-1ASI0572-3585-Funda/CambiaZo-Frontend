@@ -145,7 +145,7 @@ export class UsersService {
       data.isActive,
       data.isGoogleAccount,
       data.roles,
-      [] // Assuming favorites need to be handled separately or added later
+      []
     );
   }
 
