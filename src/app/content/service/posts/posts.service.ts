@@ -119,6 +119,32 @@ export class PostsService {
     });
   }
 
+  getProductsFlat(): Observable<Products[]> {
+    return this.http
+      .get<any[]>(`${this.baseUrl}/api/v2/products`)
+      .pipe(
+        map(products =>
+          products.map(p => new Products(
+            p.id.toString(),
+            p.user.id.toString(),
+            p.productCategory.id.toString(),
+            p.name,
+            p.description,
+            p.desiredObject,
+            p.price,
+            [p.image],
+            p.boost,
+            p.available,
+            {
+              country:    p.location.countryName,
+              department: p.location.departmentName,
+              district:   p.location.districtName
+            }
+          ))
+        )
+      );
+  }
+
   getProductById(id: string): Observable<Products> {
     return this.http.get<any>(`${this.baseUrl}/api/v2/products/${id}`).pipe(
       switchMap(product => {

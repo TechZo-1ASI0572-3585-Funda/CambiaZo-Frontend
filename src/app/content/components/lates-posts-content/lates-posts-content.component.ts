@@ -39,7 +39,7 @@ export class LatesPostsContentComponent implements OnInit{
 
   getAllProducts() {
     this.loading = true;
-    this.postService.getProducts().subscribe((res:any)=>{
+    this.postService.getProductsFlat().subscribe((res:any)=>{
       res.forEach((product: any) => {
         const newProduct = new Products(
           product.id,
