@@ -6,6 +6,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { Router, RouterLink, ActivatedRoute } from "@angular/router";
 import { MembershipsService } from "../../service/memberships/memberships.service";
 import { MatDialog } from "@angular/material/dialog";
+import { FormsModule } from '@angular/forms';
 import { DialogPaymentSuccessfullyComponent } from "../../components/dialog-payment-successfully/dialog-payment-successfully.component";
 
 @Component({
@@ -16,6 +17,7 @@ import { DialogPaymentSuccessfullyComponent } from "../../components/dialog-paym
     MatButtonModule,
     MatIconModule,
     RouterLink,
+    FormsModule
   ],
   templateUrl: './buy-membership.component.html',
   styleUrls: ['./buy-membership.component.css']
@@ -23,6 +25,18 @@ import { DialogPaymentSuccessfullyComponent } from "../../components/dialog-paym
 export class BuyMembershipComponent implements OnInit {
   user: any = {};
   membership: any = {};
+
+  cardNumber: string = '';
+  cardName: string = '';
+  expMonth: string = '';
+  expYear: string = '';
+  cvv: string = '';
+  isFlipped: boolean = false;
+
+  flipCard(flip: boolean) {
+    this.isFlipped = flip;
+  }
+
 
   constructor(
     private userService: UsersService,
