@@ -18,21 +18,6 @@
         <p *ngFor="let benefit of item.benefits"><img src="assets/images/icons/check.png" width="20vh" height="20vh" alt="icono-check">{{benefit}}</p>
       </mat-card-content>
     </mat-card>
-    <mat-card>
-      <mat-card-header>
-        <mat-card-subtitle>nombre</mat-card-subtitle>
-        <mat-card-title>
-          <span>$100<span class="info-price">c/mes</span></span>
-        </mat-card-title>
-      </mat-card-header>
-      <p class="description">descripcion</p>
-      <mat-card-actions>
-        <button>{{ isLoggedIn ? 'Cambiar Plan' : 'Obtener Ahora' }}</button>
-      </mat-card-actions>
-      <mat-card-content>
-        <p><img src="assets/images/icons/check.png" width="20vh" height="20vh" alt="icono-check">beneficios</p>
-      </mat-card-content>
-    </mat-card>
   </div>
   <p class="p-3">Todos nuestros planes se renuevan automáticamente según el período elegido inicialmente.</p>
 </div>
