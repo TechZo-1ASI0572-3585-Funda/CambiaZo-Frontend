@@ -123,10 +123,6 @@ input::placeholder{
   gap: 5px;
 }
 
-.flex-2 input{
-  width: 50px;
-}
-
 .cvv input{
   width: 50px;
 }
@@ -196,3 +192,133 @@ input::placeholder{
   padding-bottom: 30px;
 }
 
+.card-container {
+  perspective: 1000px;
+  width: 350px;
+  height: 200px;
+  margin-bottom: 20px;
+}
+.card {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.8s;
+}
+.card-container.flipped .card {
+  transform: rotateY(180deg);
+}
+.card-back {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: black;
+  border-radius: 10px;
+  transform: rotateY(180deg);
+}
+
+.card-front {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  background: linear-gradient(to bottom, #2e63f7, #4286f4);
+  border-radius: 10px;
+  color: white;
+}
+.card-logos {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.chip-logo svg,
+.visa-logo svg {
+  height: 30px;
+}
+.card-back {
+  transform: rotateY(180deg);
+  background: linear-gradient(135deg, #4286f4, #2e63f7);
+  color: black;
+  border-radius: 10px;
+  position: relative;
+  padding: 0;
+}
+.card-back::before {
+  content: '';
+  position: absolute;
+  top: 20px;
+  left: 0;
+  right: 0;
+  height: 50px;
+  background: black;
+}
+.card-number {
+  font-size: 22px;
+  letter-spacing: 2px;
+  margin-top: 60px;
+  text-align: center;
+}
+
+.card-name {
+  font-size: 14px;
+  text-transform: uppercase;
+  margin-top: 10px;
+}
+
+.card-expiration {
+  font-size: 14px;
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+}
+
+.card-cvv {
+  position: absolute;
+  top: 90px;
+  width: 80%;
+  background: white;
+  padding: 8px 20px;
+  font-size: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: right;
+}
+.flex-2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.input-text {
+  padding: 10px;
+  margin: 10px 0;
+  width: 100%;
+  font-size: 18px;
+}
+
+.flex-2 > div {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+}
+
+.card-position {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+}
