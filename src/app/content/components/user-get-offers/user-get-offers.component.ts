@@ -55,42 +55,31 @@ export class UserGetOffersComponent implements OnInit {
     this.getAllOffers();
   }
 
-  getAllOffers() {
+  getAllOffers(): void {
     const userId = localStorage.getItem('id');
-    if(userId === null) return;
-    this.offersService.getAllOffersByUserChangeId(userId).subscribe((data: any) => {
-      data.forEach((offer: any) => {
-        if(offer.status === 'Pendiente')
-          this.offers.push(new Offers(
-              offer.id.toString(),
-              offer.productOwnId.toString(),
-              offer.productChangeId.toString(),
-              offer.status
-            )
-          )
-      });
+    if (!userId) return;
 
-      this.offers.map((offer: any) => {
-        this.postsService.getProductById(offer.id_product_offers).subscribe((resPost: any) => {
-          offer.setProductOffers = resPost;
+    this.offersService
+      .getAllOffersByUserChangeId(userId)
+      .subscribe((data: any[]) => {
+        // resetea array y mapea sólo 'Pendiente'
+        this.offers = data
+          .filter(o => o.status === 'Pendiente')
+          .map(o => {
+            const offer = new Offers(
+              o.id.toString(),
+              o.productChange.id.toString(),
+              o.productOwn.id.toString(),
+              o.status
+            );
 
-          this.usersService.getUserById(Number(offer.product_offers.user_id)).subscribe((resUser: any) => {
-            offer.setUserOffers = resUser;
-            return offer
+            offer.setProductOffers = o.productChange;
+            offer.setProductGet    = o.productOwn;
+            offer.user_offer       = o.userChange;
+
+            return offer;
           });
-
-        })
       });
-
-      this.offers.map((offer: any) => {
-        this.postsService.getProductById(offer.id_product_get).subscribe((resPost: any) => {
-
-          offer.setProductGet = resPost;
-        });
-
-      });
-
-    });
   }
 
   setStatusAccepted(offerId: string) {

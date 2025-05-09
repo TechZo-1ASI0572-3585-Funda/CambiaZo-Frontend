@@ -27,6 +27,7 @@ export class ProductInformationComponent implements OnInit {
   product: any;
   user: any;
   loading = true;
+  showOffer = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -38,10 +39,10 @@ export class ProductInformationComponent implements OnInit {
   ngOnInit(): void {
     const productId = this.route.snapshot.paramMap.get('id');
     if (productId) {
-      this.postsService.getProductById(productId).subscribe(data => {
-        this.product = data;
-        this.loadCategories();
-        this.loadUser(Number(data.user_id));
+      this.postsService.getProductById(productId).subscribe(p => {
+        this.product = p;
+        this.loadUser(+p.user_id);
+        this.showOffer = +localStorage.getItem('id')! !== +p.user_id;
         this.loading = false;
       });
     }
@@ -70,10 +71,7 @@ export class ProductInformationComponent implements OnInit {
       this.usersService.addFavoriteProduct({
         productId: Number(this.product.id),
         userId
-      }).subscribe(
-        () => this.dialog.open(DialogFavoritesComponent),
-        error => console.error('Error adding to favorites:', error)
-      );
+      }).subscribe(() => this.dialog.open(DialogFavoritesComponent));
     } else {
       this.dialog.open(DialogLoginRegisterComponent, { disableClose: true });
     }
@@ -82,7 +80,7 @@ export class ProductInformationComponent implements OnInit {
   offer(): void {
     const userId = this.getLoggedInUserId();
     if (userId) {
-      this.postsService.getProducts().subscribe(products => {
+      this.postsService.getProductsFlat().subscribe(products => {
         const userProducts = products.filter(p => Number(p.user_id) === userId);
         if (userProducts.length) {
           this.dialog.open(DialogSelectProductComponent, {
@@ -102,5 +100,6 @@ export class ProductInformationComponent implements OnInit {
       this.dialog.open(DialogLoginRegisterComponent, { disableClose: true });
     }
   }
+
   protected readonly localStorage = localStorage;
 }

@@ -43,42 +43,22 @@ export class DialogSelectProductComponent implements OnInit {
 
   ngOnInit(): void {
     this.getUser();
-    this.getUserProducts();
   }
 
   getUser(): void {
-    this.userService.getUserById(Number(localStorage.getItem('id'))).subscribe(data => {
-      this.user = data;
-    });
+    this.userService
+      .getUserById(+localStorage.getItem('id')!)
+      .subscribe(u => {
+        this.user = u;
+        this.getUserProducts();
+      });
   }
-
   getUserProducts(): void {
-    this.postService.getProducts().subscribe((res: any) => {
-      res.forEach((product: any) => {
-        if (product.user_id === this.user.id) {
-          this.items.push(new Products(
-            product.id,
-            product.user_id,
-            product.category_id,
-            product.product_name,
-            product.description,
-            product.change_for,
-            product.price,
-            product.images,
-            product.boost,
-            product.available,
-            product.location
-          ));
-        }
-      });
-      this.postService.getCategoriesProducts().subscribe((categories: any) => {
-        this.items.map((item: Products) => {
-          item.setCategory = categories.find((category: any) => category.id === item.category_id).name;
-        });
-      });
-    });
+    const userId = +localStorage.getItem('id')!;
+    this.postService
+      .getProductsFlatByUserId(userId)
+      .subscribe(items => (this.items = items));
   }
-
   closeDialog(): void {
     this.dialogRef.close();
     this.dialogRef.afterClosed().subscribe(() => {
@@ -97,17 +77,15 @@ export class DialogSelectProductComponent implements OnInit {
     this.selectedProduct = product;
 
     const newOffer = new Offers(
-      '', // ID de la oferta, lo puede generar el backend
-      String(product.id), // ID del producto que ofrece
-      this.data.product_id, // ID del producto que recibe la oferta
-      'Pendiente' // Estado de la oferta
+      '',
+      product.id.toString(),
+      this.data.product_id,
+      'Pendiente'
     );
 
-    this.offersService.postOffer(newOffer).subscribe((data: Offers) => {
-    }, error => {
-      console.error('Error creating offer:', error);
-    });
-
-    this.closeDialog();
+    this.offersService.postOffer(newOffer).subscribe(
+      () => this.closeDialog(),
+      err => console.error('POST /exchanges →', err)
+    );
   }
 }

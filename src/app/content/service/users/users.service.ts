@@ -98,10 +98,14 @@ export class UsersService {
   }
 
   getUserById(id: number): Observable<Users> {
-    return this.http.get<any>(`${this.baseUrl}/api/v2/users/${id}`).pipe(
-      map(user => this.transformToUserModel(user)),
-      catchError(this.handleError)
+    const headers = new HttpHeaders().set(
+      'Authorization',
+      `Bearer ${localStorage.getItem('token')}`
     );
+
+    return this.http
+      .get<any>(`${this.baseUrl}/api/v2/users/${id}`, { headers })
+      .pipe(map(u => this.transformToUserModel(u)));
   }
 
   changePassword(id: number, newPassword: any): Observable<any> {

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpErrorResponse} from "@angular/common/http";
+import {HttpClient, HttpErrorResponse, HttpHeaders} from "@angular/common/http";
 import {environment} from "../../../../environments/environment";
-import {catchError, forkJoin, Observable, shareReplay, switchMap, tap, throwError} from "rxjs";
+import {catchError, forkJoin, Observable, of, shareReplay, switchMap, tap, throwError} from "rxjs";
 import {map} from "rxjs/operators";
 
 @Injectable({
@@ -13,30 +13,41 @@ export class OngsService {
 
   constructor(private http: HttpClient) { }
 
+  private withAuth() {
+    const t = localStorage.getItem('token');
+    return t ? { headers: new HttpHeaders({ Authorization: `Bearer ${t}` }) } : {};
+  }
+
+
   /********************* ONGs **************************/
 
   getOngs(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/api/v2/ongs`).pipe(
-      switchMap((ongs: any[]) => {
-        // Limitar el número de solicitudes concurrentes a 5
-        const requests = ongs.map((ong: any) => {
-          return forkJoin({
-            projects: this.http.get(`${this.baseUrl}/api/v2/projects/ongs/${ong.id}`).pipe(shareReplay(1)),
-            social_networks: this.http.get(`${this.baseUrl}/api/v2/social-networks/ongs/${ong.id}`).pipe(shareReplay(1)),
-            account_numbers: this.http.get(`${this.baseUrl}/api/v2/account-number/ongs/${ong.id}`).pipe(shareReplay(1))
-          }).pipe(
-            map((res: any) => {
-              ong.projects = res.projects;
-              ong.social_networks = res.social_networks;
-              ong.account_numbers = res.account_numbers;
-              return this.transformOng(ong);
-            })
-          );
-        });
-        return forkJoin(requests).pipe(
-          catchError(this.handleError)
-        );
-      })
+    return this.http.get<any[]>(`${this.baseUrl}/api/v2/donations/ongs`, this.withAuth()).pipe(
+      switchMap(ongs =>
+        forkJoin(
+          ongs.map(ong =>
+            forkJoin({
+              projects: this.http
+                .get(`${this.baseUrl}/api/v2/donations/projects/ongs/${ong.id}`, this.withAuth())
+                .pipe(catchError(() => of([])), shareReplay(1)),
+              social_networks: this.http
+                .get(`${this.baseUrl}/api/v2/donations/social-networks/ongs/${ong.id}`, this.withAuth())
+                .pipe(catchError(() => of([])), shareReplay(1)),
+              account_numbers: this.http
+                .get(`${this.baseUrl}/api/v2/donations/account-number/ongs/${ong.id}`, this.withAuth())
+                .pipe(catchError(() => of([])), shareReplay(1))
+            }).pipe(
+              map(res => {
+                ong.projects = res.projects;
+                ong.social_networks = res.social_networks;
+                ong.account_numbers = res.account_numbers;
+                return this.transformOng(ong);
+              })
+            )
+          )
+        )
+      ),
+      catchError(this.handleError)
     );
   }
 
@@ -59,21 +70,27 @@ export class OngsService {
   }
 
   getOngById(id: string): Observable<any> {
-    return this.http.get(`${this.baseUrl}/api/v2/ongs/${id}`).pipe(
-      switchMap((ong: any) => {
-        return forkJoin({
-          projects: this.http.get(`${this.baseUrl}/api/v2/projects/ongs/${ong.id}`),
-          social_networks: this.http.get(`${this.baseUrl}/api/v2/social-networks/ongs/${ong.id}`),
-          account_numbers: this.http.get(`${this.baseUrl}/api/v2/account-number/ongs/${ong.id}`)
+    return this.http.get<any>(`${this.baseUrl}/api/v2/ongs/${id}`, this.withAuth()).pipe(
+      switchMap(ong =>
+        forkJoin({
+          projects: this.http
+            .get(`${this.baseUrl}/api/v2/donations/projects/ongs/${ong.id}`, this.withAuth())
+            .pipe(catchError(() => of([]))),
+          social_networks: this.http
+            .get(`${this.baseUrl}/api/v2/donations/social-networks/ongs/${ong.id}`, this.withAuth())
+            .pipe(catchError(() => of([]))),
+          account_numbers: this.http
+            .get(`${this.baseUrl}/api/v2/donations/account-number/ongs/${ong.id}`, this.withAuth())
+            .pipe(catchError(() => of([])))
         }).pipe(
-          map((res: any) => {
+          map(res => {
             ong.projects = res.projects;
             ong.social_networks = res.social_networks;
             ong.account_numbers = res.account_numbers;
-            return this.transformOng(ong); // Aquí se llama a transformOng()
+            return this.transformOng(ong);
           })
-        );
-      }),
+        )
+      ),
       catchError(this.handleError)
     );
   }
@@ -169,26 +186,27 @@ export class OngsService {
   }
   /***************** ONGs Categories **************************/
 
+
   getCategoriesOngs(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/api/v2/category-ongs`).pipe(
-      catchError(this.handleError)
-    );
+    return this.http
+      .get<any[]>(`${this.baseUrl}/api/v2/donations/category-ongs`, this.withAuth())
+      .pipe(catchError(this.handleError));
   }
 
   postCategoryOng(data: any): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/api/v2/category-ongs`, data).pipe(
+    return this.http.post<any>(`${this.baseUrl}/api/v2/donations/category-ongs`, data).pipe(
       catchError(this.handleError)
     );
   }
 
   deleteCategoryOng(id: string): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/api/v2/category-ongs/${id}`).pipe(
+    return this.http.delete(`${this.baseUrl}/api/v2/donations/category-ongs/${id}`).pipe(
       catchError(this.handleError)
     );
   }
 
   putCategoryOng(id: string, data: any): Observable<any> {
-    return this.http.put(`${this.baseUrl}/api/v2/category-ongs/${id}`, data).pipe(
+    return this.http.put(`${this.baseUrl}/api/v2/donations/category-ongs/${id}`, data).pipe(
       catchError(this.handleError)
     );
   }

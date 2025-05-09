@@ -14,6 +14,8 @@ import {
 import {MatIcon} from "@angular/material/icon";
 import {JsonPipe, NgForOf, NgStyle} from "@angular/common";
 import {Products} from "../../model/products/products.model";
+import {forkJoin, switchMap} from "rxjs";
+import {map} from "rxjs/operators";
 
 @Component({
   selector: 'app-user-sent-offers',
@@ -23,12 +25,10 @@ import {Products} from "../../model/products/products.model";
     MatCardAvatar,
     MatCardContent,
     MatCardHeader,
-    MatCardTitle,
     MatIcon,
     NgForOf,
     NgStyle,
-    MatCardFooter,
-    JsonPipe
+    MatCardFooter
   ],
   templateUrl: './user-sent-offers.component.html',
   styleUrl: './user-sent-offers.component.css'
@@ -42,46 +42,40 @@ export class UserSentOffersComponent implements OnInit{
   ngOnInit() {
     this.getAllOffers();
   }
-  getAllOffers(){
+  getAllOffers(): void {
     const userId = localStorage.getItem('id');
-    if(userId === null) return;
-    this.offersService.getAllOffersByUserOwnId(userId).subscribe((data: any) => {
-      data.forEach((offer: any) => {
+    if (!userId) return;
 
-        this.offers.push(new Offers(
-            offer.id.toString(),
-            offer.productOwnId.toString(),
-            offer.productChangeId.toString(),
-            offer.status
+    this.offersService
+      .getAllOffersByUserOwnId(userId)
+      .pipe(
+        switchMap((list: any[]) =>
+          forkJoin(
+            list.map(ex =>
+              forkJoin({
+                prodOwn:    this.postsService.getProductById(ex.productOwn.id),
+                prodChange: this.postsService.getProductById(ex.productChange.id),
+                userChange: this.usersService.getUserById(ex.userChange.id)
+              }).pipe(
+                map(({ prodOwn, prodChange, userChange }) => {
+                  const o = new Offers(
+                    ex.id.toString(),
+                    prodOwn.id.toString(),
+                    prodChange.id.toString(),
+                    ex.status
+                  );
+                  o.setProductOffers = prodOwn;
+                  o.setProductGet    = prodChange;
+                  o.setUserGet       = userChange;
+                  return o;
+                })
+              )
+            )
           )
         )
-      });
-
-      this.offers.map((offer: any) => {
-        this.postsService.getProductById(offer.id_product_offers).subscribe((resPost: any) => {
-          offer.setProductOffers = resPost;
-          return offer
-        })
-      });
-
-      this.offers.map((offer: any) => {
-        this.postsService.getProductById(offer.id_product_get).subscribe((resPost: any) => {
-
-          offer.setProductGet = resPost;
-
-          this.usersService.getUserById(Number(offer.product_get.user_id)).subscribe((resUser: any) => {
-            offer.setUserGet = resUser;
-            return offer
-          });
-
-        });
-
-      });
-
-    });
+      )
+      .subscribe(result => (this.offers = result));
   }
-
-
   getStatusStyles(status: string) {
     let styles = {};
     switch (status) {

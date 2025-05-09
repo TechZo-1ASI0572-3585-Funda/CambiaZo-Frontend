@@ -43,7 +43,7 @@ export class MyPostsComponent implements OnInit {
 
   ngOnInit() {
     this.getUser();
-    this.getAllProducts();
+    this.getMyProducts();
   }
 
   getUser() {
@@ -52,30 +52,16 @@ export class MyPostsComponent implements OnInit {
     });
   }
 
-  getAllProducts() {
+  getMyProducts(): void {
     const userId = Number(localStorage.getItem('id'));
-    this.postService.getProductsByUserId(userId).subscribe((res: any) => {
-      this.items = res.map((product: any) => new Products(
-        product.id,
-        product.user_id,
-        product.category_id,
-        product.product_name,
-        product.description,
-        product.change_for,
-        product.price,
-        product.images,
-        product.boost,
-        product.available,
-        product.location
-      ));
+    if (!userId) return;
 
-      this.postService.getCategoriesProducts().subscribe((categories: any) => {
-        this.items = this.items.map((item: Products) => {
-          const category = categories.find((category: any) => category.id === item.category_id);
-          if (category) {
-            item.setCategory = category.name;
-          }
-          return item;
+    this.postService.getProductsFlatByUserId(userId).subscribe(items => {
+      this.items = items;
+      this.postService.getCategoriesProducts().subscribe(cats => {
+        this.items.forEach(it => {
+          const c = cats.find((cat: any) => cat.id === it.category_id);
+          if (c) it.setCategory = c.name;
         });
       });
     });

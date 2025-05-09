@@ -60,7 +60,7 @@ mat-card {
 
 .product-image mat-card mat-card-content img {
   width: 75%;
-  height: 70vh;
+  height: auto;
   object-fit: cover;
   object-position: center;
 }
