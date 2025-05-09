@@ -16,14 +16,9 @@ import {DialogEditPostComponent} from "../../../public/components/dialog-edit-po
   standalone: true,
   imports: [
     NgForOf,
-    MatDialogClose,
     MatDialogContent,
     MatDialogTitle,
-    MatIcon,
     ReactiveFormsModule,
-    JsonPipe,
-    NgIf,
-    RouterLink
   ],
   templateUrl: './form-edit-post.component.html',
   styleUrl: './form-edit-post.component.css'
@@ -80,7 +75,7 @@ export class FormEditPostComponent implements OnInit{
 
 
   getCountries(){
-    this.countriesService.getCountries().subscribe((res:any)=>{
+    this.countriesService.getLocation().subscribe((res:any)=>{
       this.countries = res;
       this.departments= this.countries[0].departments;
     })
@@ -163,7 +158,7 @@ export class FormEditPostComponent implements OnInit{
     if (e.target.files) {
       Array.from(e.target.files).forEach(async (file: any) => {
         const imageFile = e.target.files[0];
-        const url = `https://api.imgbb.com/1/upload?expiration300&key=e20a8b081ea288c51254cd9dca20515c&name=${imageFile.name}`;
+        const url = `https://api.imgbb.com/1/upload?expiration300&key=ae6e0b3b9be3e7f4aea315fdd3233ff1&name=${imageFile.name}`;
         const data = new FormData();
         data.append('image', imageFile);
         try {
@@ -187,7 +182,7 @@ export class FormEditPostComponent implements OnInit{
       for (let i = 0; i < fileList.length; i++) {
 
         const file = fileList[i];
-        const url = `https://api.imgbb.com/1/upload?expiration=300&key=e20a8b081ea288c51254cd9dca20515c&name=${file.name}`;
+        const url = `https://api.imgbb.com/1/upload?expiration=300&key=ae6e0b3b9be3e7f4aea315fdd3233ff1&name=${file.name}`;
         const data = new FormData();
         data.append('image', file);
 

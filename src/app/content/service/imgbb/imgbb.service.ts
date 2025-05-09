@@ -7,7 +7,7 @@ import {map} from "rxjs/operators";
   providedIn: 'root'
 })
 export class ImgbbService {
-  private readonly apiKey: string="e20a8b081ea288c51254cd9dca20515c";
+  private readonly apiKey: string="ae6e0b3b9be3e7f4aea315fdd3233ff1";
 
   constructor(private readonly httpClient:HttpClient) { }
 

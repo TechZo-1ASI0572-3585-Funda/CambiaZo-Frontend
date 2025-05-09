@@ -99,7 +99,7 @@ export class CreateInfoPostContentComponent implements OnInit {
 
   async uploadImage(): Promise<string[]> {
     this.imagesUrl = [];
-    const apiKey = 'e20a8b081ea288c51254cd9dca20515c';
+    const apiKey = 'ae6e0b3b9be3e7f4aea315fdd3233ff1';
     for (const file of this.files) {
       const data = new FormData();
       data.append('image', file);

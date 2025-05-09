@@ -62,7 +62,7 @@ export class DialogChangeProfileComponent {
   }
 
   async changeImageProfile(){
-    const api = "https://api.imgbb.com/1/upload?expiration=300&key=e20a8b081ea288c51254cd9dca20515c&name="
+    const api = "https://api.imgbb.com/1/upload?expiration=300&key=ae6e0b3b9be3e7f4aea315fdd3233ff1&name="
     for (let file of this.files){
       const url = api + file.name
       const data = new FormData();
