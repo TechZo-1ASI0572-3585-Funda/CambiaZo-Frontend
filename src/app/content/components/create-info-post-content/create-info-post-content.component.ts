@@ -10,6 +10,8 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { NgxDropzoneModule } from 'ngx-dropzone';
 import { PostsService } from '../../service/posts/posts.service';
 import { CategoriesObjects } from '../../model/categories-objects/categories-objects.model';
+import {FirebaseStorageService} from "../../service/firebase-storage/firebase-storage";
+import {lastValueFrom} from "rxjs";
 
 @Component({
   selector: 'app-create-info-post-content',
@@ -51,7 +53,7 @@ export class CreateInfoPostContentComponent implements OnInit {
     price: new FormControl<number | null>(null, Validators.required)
   });
 
-  constructor(private postService: PostsService) {}
+  constructor(private postService: PostsService, private storageService: FirebaseStorageService) {}
 
   ngOnInit(): void {
     this.formProduct.patchValue({
@@ -99,16 +101,11 @@ export class CreateInfoPostContentComponent implements OnInit {
 
   async uploadImage(): Promise<string[]> {
     this.imagesUrl = [];
-    const apiKey = 'ae6e0b3b9be3e7f4aea315fdd3233ff1';
     for (const file of this.files) {
-      const data = new FormData();
-      data.append('image', file);
-      const response = await fetch(
-        `https://api.imgbb.com/1/upload?expiration=300&key=${apiKey}&name=${file.name}`,
-        { method: 'POST', body: data }
-      );
-      const json = await response.json();
-      this.imagesUrl.push(json.data.url);
+      const { progress$, url$ } = this.storageService.uploadProductImage(file, this.category_id || 'default');
+      progress$.subscribe();
+      const url = await lastValueFrom(url$);
+      this.imagesUrl.push(url);
     }
     return this.imagesUrl;
   }

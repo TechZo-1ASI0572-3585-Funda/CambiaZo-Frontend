@@ -5,25 +5,31 @@
   <div class="line"></div>
 </div>
 <div class="favorites__container">
-  <ng-container *ngFor="let favorite of favorites">
-      <mat-card class="example-card">
-        <img class="card__img" src="{{favorite.images}}">
-        <div class="card__information">
-          <mat-card-header class="card__header">
-            <mat-card-title class="card__title">{{favorite.product_name}}</mat-card-title>
-            <button (click)="openConfirm(favorite.id)" class="delete__button" title="Eliminar">
-              <mat-icon>delete</mat-icon>
-            </button>
-          </mat-card-header>
-          <mat-card-content class="card__content">
-            <p class="p__information"><mat-icon style="color: #FFD146">place</mat-icon>{{favorite.location.district}}, {{favorite.location.department}}</p>
-            <p class="p__information"><img src="./assets/images/icons/change.svg" style="height: 24px; width: 24px">{{favorite.change_for}}</p>
-            <p class="p__price">Valor aproximado s/.{{favorite.price}}</p>
-          </mat-card-content>
-          <mat-card-footer class="card__footer">
-            <button [routerLink]="['/product-information', favorite.id]" class="offer__button">Ver Más</button>
-          </mat-card-footer>
-        </div>
-      </mat-card>
+  <ng-container *ngIf="favorites && favorites.length > 0">
+    <mat-card class="example-card" *ngFor="let favorite of favorites">
+      <img class="card__img" [src]="favorite.image" alt="Imagen del producto">
+      <div class="card__information">
+        <mat-card-header class="card__header">
+          <mat-card-title class="card__title">{{ favorite.name }}</mat-card-title>
+          <button (click)="openConfirm(favorite.id)" class="delete__button" title="Eliminar">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-card-header>
+        <mat-card-content class="card__content">
+          <p class="p__information">
+            <mat-icon style="color: #FFD146">place</mat-icon>
+            {{ favorite.location?.districtName }}, {{ favorite.location?.departmentName }}
+          </p>
+          <p class="p__information">
+            <img src="./assets/images/icons/change.svg" style="height: 24px; width: 24px">
+            {{ favorite.desiredObject }}
+          </p>
+          <p class="p__price">Valor aproximado s/.{{ favorite.price }}</p>
+        </mat-card-content>
+        <mat-card-footer class="card__footer">
+          <button [routerLink]="['/product-information', favorite.id]" class="offer__button">Ver Más</button>
+        </mat-card-footer>
+      </div>
+    </mat-card>
   </ng-container>
 </div>

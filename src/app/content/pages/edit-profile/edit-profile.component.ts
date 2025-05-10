@@ -24,6 +24,7 @@ import {
 import {
   DialogChangeProfileComponent
 } from "../../../public/components/dialog-change-profile/dialog-change-profile.component";
+import {FirebaseStorageService} from "../../service/firebase-storage/firebase-storage";
 
 @Component({
   selector: 'app-edit-profile',
@@ -59,7 +60,7 @@ export class EditProfileComponent implements OnInit {
   changePasswordSuccess: string | null = null;
   membership:  any = {};
 
-  constructor(private fb: FormBuilder, private userService: UsersService, private membershipService: MembershipsService, private router: Router, private dialog: MatDialog) {
+  constructor(private fb: FormBuilder, private userService: UsersService, private membershipService: MembershipsService, private router: Router, private dialog: MatDialog,) {
     this.editProfileForm = this.fb.group({
       name: ['', Validators.required],
       username: ['', [Validators.required, CustomValidators.validEmail]],
