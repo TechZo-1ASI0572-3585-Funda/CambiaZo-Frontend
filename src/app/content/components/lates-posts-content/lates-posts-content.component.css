@@ -146,29 +146,34 @@ mat-card-footer{
   justify-content: center;
   display: flex;
 }
-.box-categories{
+
+.box-categories {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   width: 70%;
 }
-.box-categories button{
-  color: #FFD146;
+
+.box-categories button {
+  background-color: #ffffff;
+  color: #1a1a1a;
   font-family: 'Montserrat', sans-serif;
-  font-weight: bolder;
-  border: solid 1.6px #FFD146;
+  font-weight: 700;
+  padding: 0.5rem 1rem;
+  border: 2px solid #FFD146;
   border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 }
 
-.box-categories button:not(last-child){
-  z-index: 0;
-  margin-right: 0.2rem;
-  margin-left: 0.2rem;
-  margin-bottom: 0.4rem;
+.box-categories button:not(:last-child) {
+  margin: 0 0.2rem 0.4rem 0.2rem;
 }
 
-.box-categories button:hover{
-  background-color: black;
+.box-categories button:hover {
+  background-color: #1a1a1a;
+  color: #FFD146;
+  border-color: #1a1a1a;
 }
 
 @media (max-width: 700px){
