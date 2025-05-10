@@ -28,9 +28,7 @@ import {DialogEditPostComponent} from "../../../public/components/dialog-edit-po
     NgIf,
     MatMenuModule,
     MatIconModule,
-    MatIconButton,
     MatButtonModule,
-    RouterLink,
     NgClass,
     FormsModule,
     ReactiveFormsModule
@@ -42,14 +40,13 @@ export class CompleteExchangesComponent implements OnInit{
 
 
   offers: any[] = [];
+  offers2: Offers[] = [];
   userMe: any = {};
   maxRating: number = 5;
   selectedStar:number[]=[];
   maxRatingArr:any=[];
   previousSelection:number[]=[];
   inputs: any[] = [];
-
-  offers2: any[] = [];
   constructor(private dialogReviewPost: MatDialog,private offersService:OffersService, private postService:PostsService, private userService:UsersService, private reviewService:ReviewsService) {}
 
 
@@ -58,7 +55,7 @@ export class CompleteExchangesComponent implements OnInit{
     this.maxRatingArr=Array(this.maxRating).fill(0);
     this.getUser();
     this.getAllOffers();
-    this.getAllOffers2();
+    this.getFinishedOffers();
   }
 
   getUser(){
@@ -67,6 +64,24 @@ export class CompleteExchangesComponent implements OnInit{
     })
   };
 
+  getFinishedOffers() {
+    const userId = localStorage.getItem('id');
+    if (!userId) return;
+    this.offersService.getFinishedByUserId(userId).subscribe((data: any[]) => {
+      this.offers2 = data.map(o => new Offers(
+        o.id.toString(),
+        o.productChange.id.toString(),
+        o.productOwn.id.toString(),
+        o.status
+      ));
+      this.offers2.forEach(offer => {
+        this.postService.getProductById(offer.id_product_offers)
+          .subscribe(p => offer.setProductOffers = p);
+        this.postService.getProductById(offer.id_product_get)
+          .subscribe(p => offer.setProductGet = p);
+      });
+    });
+  }
 
   getAllOffers(){
     const userId = localStorage.getItem('id');
@@ -160,22 +175,23 @@ export class CompleteExchangesComponent implements OnInit{
     this.previousSelection[indexOffer]=this.selectedStar[indexOffer];
   }
 
-  sendReview(indexOffer:any, otherId:any){
-    if(this.selectedStar[indexOffer]==0){
+  sendReview(indexOffer: number, otherId: number, exchangeId: number) {
+    if (!this.selectedStar[indexOffer]) {
       alert("Por favor seleccione una puntuación de estrellas");
+      return;
     }
-    if(this.selectedStar[indexOffer]!=0){
-        const review = {
-          content: this.inputs[indexOffer],
-          score: this.selectedStar[indexOffer],
-          get_user_id: otherId,
-          give_user_id: this.userMe.id
-        }
-        console.log(review);
-        this.reviewService.postReview(review).subscribe((data) => {
-          this.dialogReviewPost.open(DialogEditPostComponent,{disableClose: true});
-        });
-    }
+    const reviewPayload = {
+      message:        this.inputs[indexOffer] || "",
+      rating:         this.selectedStar[indexOffer],
+      state:          "COMPLETED",
+      exchangeId:     exchangeId,
+      userAuthorId:   this.userMe.id,
+      userReceptorId: otherId
+    };
+    this.reviewService.postReview(reviewPayload)
+      .subscribe(() => {
+        this.dialogReviewPost.open(DialogEditPostComponent, { disableClose: true });
+      });
   }
 
 }

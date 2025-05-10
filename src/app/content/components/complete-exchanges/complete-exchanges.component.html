@@ -14,7 +14,7 @@
         </div>
         <img class="arrows" src="./assets/images/icons/arrows.svg" alt="">
         <div class="product__get">
-          <img class="card__img" src="{{ sent.product_get?.images }}">
+          <img class="card__img" [src]="sent.product_get?.image" alt="Producto obtenido">
           <p class="get__text">Conseguiste un {{ sent.product_get?.product_name }}</p>
         </div>
       </div>
@@ -34,11 +34,14 @@
         </div>
         <p class="suggest">Deja una reseña y comparte tu experiencia con {{ sent.user_get?.name }}:</p>
         <textarea [(ngModel)]="inputs[i]" class="review__text" placeholder="Escribe aquí..."></textarea>
-        <button class="send__review" (click)="sendReview(i, sent.user_get?.id)">Publicar</button>
+        <button class="send__review"
+                (click)="sendReview(i, sent.user_get?.id, +sent.id)">
+          Publicar
+        </button>
       </div>
     </mat-card>
   </ng-container>
-  <ng-container *ngFor="let sent of offers2; let i = index">
+  <ng-container *ngFor="let sent of offers2; let j = index">
     <mat-card *ngIf="sent.status == 'Aceptado'" class="example-card">
       <div class="exchange__info">
         <div class="product__offer">
@@ -57,17 +60,20 @@
           <p class="point">Puntuación:</p>
           <div class="star-rating">
             <mat-icon *ngFor="let icon of maxRatingArr; let indexRate = index"
-                      (mouseenter)="HandleMouseEnter(indexRate, i)"
-                      (mouseleave)="HandleMouseLeave(i)"
-                      (click)="Rating(indexRate, i)"
-                      [ngClass]="{checked: selectedStar[i] > indexRate}">
+                      (mouseenter)="HandleMouseEnter(indexRate, j)"
+                      (mouseleave)="HandleMouseLeave(j)"
+                      (click)="Rating(indexRate, j)"
+                      [ngClass]="{checked: selectedStar[j] > indexRate}">
               star
             </mat-icon>
           </div>
         </div>
         <p class="suggest">Deja una reseña y comparte tu experiencia con {{ sent.user_get?.name }}:</p>
-        <textarea [(ngModel)]="inputs[i]" class="review__text" placeholder="Escribe aquí..."></textarea>
-        <button class="send__review" (click)="sendReview(i, sent.user_get?.id)">Publicar</button>
+        <textarea [(ngModel)]="inputs[j]" class="review__text" placeholder="Escribe aquí..."></textarea>
+        <button class="send__review"
+                (click)="sendReview(j, sent.user_get?.id, +sent.id)">
+          Publicar
+        </button>
       </div>
     </mat-card>
   </ng-container>
