@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { CreatePostInfoUserContentComponent } from '../../components/create-post-info-user-content/create-post-info-user-content.component';
 import { CreateInfoPostContentComponent } from '../../components/create-info-post-content/create-info-post-content.component';
 import { DialogSuccessfullyPostComponent } from '../../../public/components/dialog-successfully-post/dialog-successfully-post.component';
+import {DialogLimitReachedComponent} from "../../components/dialog-limit-reached/dialog-limit-reached.component";
 
 @Component({
   selector: 'app-post',
@@ -34,26 +35,40 @@ export class PostComponent {
   ) {}
 
   onPost(): void {
-    const infoProduct = this.createInfoPostContentComponent.onSubmit();
+
+    const infoProduct    = this.createInfoPostContentComponent.onSubmit();
     const contactProduct = this.createPostInfoUserContentComponent.onSubmit();
-    if (infoProduct && contactProduct) {
-      this.createInfoPostContentComponent.uploadImage().then((images: string[]) => {
-        const newProduct = {
-          user_id: localStorage.getItem('id') ?? 'default',
-          ...infoProduct,
-          images: images.length ? images : [this.imageDefault],
-          boost: contactProduct.boost,
-          location: {
-            country: contactProduct.country,
-            department: contactProduct.department,
-            district: contactProduct.district
-          }
-        };
-        this.productsService.postProduct(newProduct).subscribe(() => {
+    if (!infoProduct || !contactProduct) return;
+
+    this.createInfoPostContentComponent.uploadImage().then(images => {
+
+      const newProduct = {
+        user_id:  localStorage.getItem('id') ?? 'default',
+        ...infoProduct,
+        images: images.length ? images : [this.imageDefault],
+        boost:  contactProduct.boost,
+        location: {
+          country:    contactProduct.country,
+          department: contactProduct.department,
+          district:   contactProduct.district
+        }
+      };
+
+      this.productsService.postProduct(newProduct).subscribe({
+        next: () => {
           const ref = this.dialog.open(DialogSuccessfullyPostComponent);
           ref.afterClosed().subscribe(() => this.router.navigateByUrl('/home'));
-        });
+        },
+
+        /* ← captura el 400 y muestra el nuevo diálogo */
+        error: err => {
+          if (err.status === 400) {
+            this.dialog.open(DialogLimitReachedComponent, { disableClose: true });
+          } else {
+            console.error('POST /products →', err);
+          }
+        }
       });
-    }
+    });
   }
 }
