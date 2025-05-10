@@ -25,6 +25,7 @@ import { Users } from "../../model/users/users.model";
 export class MembershipsComponent implements OnInit {
 
   memberships: Memberships[] = [];
+  membershipCurrent: any;
   user: Users | null = null;
   isLoggedIn: boolean = false;
   dataLoaded: boolean = false;
@@ -41,6 +42,16 @@ export class MembershipsComponent implements OnInit {
     this.isLoggedIn = this.userService.isLogged;
       this.getUser();
       this.loadMemberships();
+    this.getMembershipCurrent();
+  }
+
+  getMembershipCurrent(){
+    const userId = localStorage.getItem('id');
+    if (userId) {
+      this.membershipsService.getUserMembership(userId).subscribe((data) => {
+        this.membershipCurrent = data;
+      });
+    }
   }
 
   getUser() {

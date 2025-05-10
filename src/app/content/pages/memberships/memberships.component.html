@@ -2,7 +2,7 @@
   <p class="p-1">¡Sé parte de nuestra comunidad premium</p>
   <p class="p-2">y obten beneficios exclusivos para ti!</p>
   <div class="container-memberships">
-    <mat-card *ngFor="let item of memberships; let i = index" [ngClass]="{'background-white': i % 2 === 0, 'background-primary': i % 2 !== 0}">
+    <mat-card *ngFor="let item of memberships; let i = index" [ngClass]="{'background-white': i % 2 === 0, 'background-primary': i % 2 !== 0      }">
       <mat-card-header>
         <mat-card-subtitle>{{item.name}}</mat-card-subtitle>
         <mat-card-title>
@@ -12,7 +12,13 @@
       </mat-card-header>
       <p class="description">{{ item.description }}</p>
       <mat-card-actions>
-        <button (click)="onBuyPlan(item.id)">{{ isLoggedIn ? 'Cambiar Plan' : 'Obtener Ahora' }}</button>
+        <button
+          (click)="onBuyPlan(item.id)"
+          [disabled]="item.id == membershipCurrent.plan.id"
+          [ngClass]="item.id == membershipCurrent.plan.id ? 'btn-disabled' : 'btn-primary'"
+        >
+          {{ isLoggedIn ? 'Cambiar Plan' : 'Obtener Ahora' }}
+        </button>
       </mat-card-actions>
       <mat-card-content>
         <p *ngFor="let benefit of item.benefits"><img src="assets/images/icons/check.png" width="20vh" height="20vh" alt="icono-check">{{benefit}}</p>
