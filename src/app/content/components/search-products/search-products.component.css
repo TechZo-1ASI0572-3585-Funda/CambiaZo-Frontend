@@ -9,23 +9,35 @@
   padding: 2rem;
   margin-bottom:2rem;
 }
-.box-categories{
+.box-categories-filters{
   background-color: white;
   display: flex;
   flex-wrap: wrap;
 }
-.box-categories button{
-  color: #FFD146;
+.chip-category-filter {
+  background-color: #ffffff;
+  color: #1a1a1a;
   font-family: 'Montserrat', sans-serif;
-  font-weight: bolder;
-  border: solid 1.6px #FFD146;
+  font-weight: 700;
+  border: 2px solid #FFD146;
   border-radius: 5px;
-  margin:0.4rem;
+  margin: 0.4rem;
+  padding: 0.5rem 0.5rem;
+  font-size: 12px;
 }
 
-.box-categories button:hover{
-  background-color: black;
+.categorySelected {
+  background-color: #1a1a1a;
+  color: #FFD146 !important;
+  border-color: #1a1a1a;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  padding: 0.5rem 0.5rem;
+  font-size: 12px;
+  margin: 0.4rem;
 }
+
+
 
 /* Search */
 

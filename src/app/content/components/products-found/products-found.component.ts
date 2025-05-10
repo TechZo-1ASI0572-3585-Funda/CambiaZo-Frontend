@@ -66,7 +66,7 @@ export class ProductsFoundComponent implements OnInit{
       item.category === this.categoryIdSearched &&
       (product.wordKey  ? item.product_name.includes(product.wordKey) : true) &&
       (product.countries ? item.location.country == product.countries : true) &&
-      (product.departments ? item.location.departament == product.departments : true) &&
+      (product.departments ? item.location.department == product.departments : true) &&
       (product.cities ? item.location.district == product.cities : true) &&
       (item.price >= (product.priceMin ? product.priceMin: 0) &&
         item.price <= (product.priceMax ? product.priceMax:Infinity)))
@@ -101,7 +101,9 @@ export class ProductsFoundComponent implements OnInit{
           }
         })
         this.productsFiltered = this.allProducts.filter((item: Products) => item.getCategory === this.categoryIdSearched)
+
       })
+
     })
   }
 
