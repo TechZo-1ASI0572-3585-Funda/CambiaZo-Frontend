@@ -40,7 +40,7 @@ export class CompleteExchangesComponent implements OnInit{
 
 
   offers: any[] = [];
-  offers2: Offers[] = [];
+  offers2: any[] = [];
   userMe: any = {};
   maxRating: number = 5;
   selectedStar:number[]=[];
@@ -68,18 +68,8 @@ export class CompleteExchangesComponent implements OnInit{
     const userId = localStorage.getItem('id');
     if (!userId) return;
     this.offersService.getFinishedByUserId(userId).subscribe((data: any[]) => {
-      this.offers2 = data.map(o => new Offers(
-        o.id.toString(),
-        o.productChange.id.toString(),
-        o.productOwn.id.toString(),
-        o.status
-      ));
-      this.offers2.forEach(offer => {
-        this.postService.getProductById(offer.id_product_offers)
-          .subscribe(p => offer.setProductOffers = p);
-        this.postService.getProductById(offer.id_product_get)
-          .subscribe(p => offer.setProductGet = p);
-      });
+      this.offers2 = data;
+      console.log(data);
     });
   }
 
