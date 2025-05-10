@@ -81,7 +81,7 @@ export class ProductInformationComponent implements OnInit {
     const userId = this.getLoggedInUserId();
     if (userId) {
       this.postsService.getProductsFlat().subscribe(products => {
-        const userProducts = products.filter(p => Number(p.user_id) === userId);
+        const userProducts = products.filter(p => Number(p.userId) === userId);
         if (userProducts.length) {
           this.dialog.open(DialogSelectProductComponent, {
             data: {
