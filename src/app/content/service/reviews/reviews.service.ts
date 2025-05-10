@@ -12,11 +12,24 @@ export class ReviewsService {
   baseUrl= environment.baseUrl;
   constructor(private http:HttpClient) { }
 
-  getReviews(){
-    return this.http.get(`${this.baseUrl}/api/v2/reviews`)
+  getReviews(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/api/v2/reviews`);
   }
 
-  postReview(data: any): Observable<any>{
-    return this.http.post<any>(`${this.baseUrl}/reviews`, data)
+  postReview(data: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/api/v2/reviews`, data);
   }
+
+  getReviewsByReceptor(userId: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/api/v2/reviews/user-receptor/${userId}`);
+  }
+
+  getReviewByAuthorAndExchange(userId: string, exchangeId: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/api/v2/reviews/user-author/${userId}/exchange/${exchangeId}`);
+  }
+
+  getAverageReviewCount(userId: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/api/v2/reviews/avarage-count/${userId}`);
+  }
+  
 }
