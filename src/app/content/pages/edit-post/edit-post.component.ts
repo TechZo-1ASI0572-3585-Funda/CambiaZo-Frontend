@@ -56,7 +56,7 @@ export class EditPostComponent implements OnInit {
     const contactProduct = this.createPostInfoUserContentComponent.onSubmit();
     if (infoProduct && contactProduct) {
       this.createInfoPostContentComponent.uploadImage().then((images: string[]) => {
-        this.productsService.getDistrictId(this.post.location.district).subscribe(districtId => {
+        this.productsService.getDistrictId(this.post.location.districtName).subscribe(districtId => {
           const newProduct = {
             name: infoProduct.product_name,
             description: infoProduct.description,

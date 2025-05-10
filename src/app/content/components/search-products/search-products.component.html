@@ -1,9 +1,15 @@
 <div class="container">
   <div class="search-by-category">
     <h1>Categorías</h1>
-      <div class="box-categories">
-        <button mat-button class='chip-category' *ngFor="let category of categories"  (click)="filterProducts(category.name)" [routerLink]="['/home/','products&'+category.name]">{{category.name}}</button>
-      </div>
+      <div class="box-categories-filters">
+          <button
+            mat-button
+            *ngFor="let category of categories"
+            (click)="filterProducts(category.name)"
+            [routerLink]="['/home/', 'products&' + category.name]"
+            [ngClass]="category.name === buttonSelected ? 'categorySelected' : 'chip-category-filter'">
+            {{ category.name }}
+          </button>
   </div>
 
 
@@ -20,7 +26,7 @@
 
       <select formControlName="countries" (change)="onCountrySelectionChange()">
         <option [ngValue]="null" selected [hidden]="!formProduct.value.countries">{{!formProduct.value.countries ? 'Seleccionar un pais' : '..'}}</option>
-        <option *ngFor="let country of countries" [ngValue]='country.country'>{{country.country}}</option>
+        <option *ngFor="let country of countries" [ngValue]='country.name'>{{country.name}}</option>
       </select>
 
       <select formControlName="departments"  (change)="onCitiesSelectionChange()">

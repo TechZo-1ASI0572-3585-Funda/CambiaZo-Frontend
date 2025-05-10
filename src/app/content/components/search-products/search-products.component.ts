@@ -10,6 +10,7 @@ import {MatIcon} from "@angular/material/icon";
 import {CountriesService} from "../../service/countries/countries.service";
 import {MatOption} from "@angular/material/autocomplete";
 import {MatSelect} from "@angular/material/select";
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-search-products',
@@ -26,7 +27,8 @@ import {MatSelect} from "@angular/material/select";
     MatOption,
     NgIf,
     MatSelect,
-    FormsModule
+    FormsModule,
+    CommonModule
   ],
   templateUrl: './search-products.component.html',
   styleUrl: './search-products.component.css'
@@ -37,7 +39,7 @@ export class SearchProductsComponent implements OnInit{
   @Output() productSearched = new EventEmitter<any>();
 
   categories:any[] = []
-
+  buttonSelected: string = ''
   countries: any[]= []
   departments: any[]=[]
   cities: string[]=[]
@@ -61,6 +63,7 @@ export class SearchProductsComponent implements OnInit{
   }
 
   filterProducts(category_name:string){
+    this.buttonSelected = category_name
     this.categorySearched.emit(category_name)
   }
   getAllProductCategories() {
@@ -83,7 +86,7 @@ export class SearchProductsComponent implements OnInit{
     this.formProduct.get('departments')?.reset()
     this.formProduct.get('cities')?.reset()
     if(this.formProduct.value.countries) {
-      const selectedCountryObj = this.countries.find(c => c.country === this.formProduct.value.countries);
+      const selectedCountryObj = this.countries.find(c => c.name == this.formProduct.value.countries);
         this.departments = selectedCountryObj.departments;
     }
 
@@ -104,5 +107,7 @@ export class SearchProductsComponent implements OnInit{
   validateInput(event:any) {
     if (event.data === '-' || event.data === '+')event.preventDefault();
   }
+
+
 
 }

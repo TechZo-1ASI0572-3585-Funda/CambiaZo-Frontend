@@ -50,11 +50,14 @@ export class CreatePostInfoUserContentComponent implements OnInit {
   constructor(
     private countriesService: CountriesService,
     private usersService: UsersService
-  ) {}
+  ) {
+
+
+  }
 
   ngOnInit(): void {
     this.formProduct.get('boost')?.setValue(this.boost);
-    this.loadCountries();
+    this.loadCountries(this.country, this.department, this.city);
     this.loadUser();
   }
 
@@ -66,7 +69,7 @@ export class CreatePostInfoUserContentComponent implements OnInit {
       : null;
   }
 
-  private loadCountries(): void {
+  private loadCountries(country:string | null,department:string| null,city:string| null): void {
     this.countriesService.getLocation().subscribe(res => {
       this.countries = res;
       if (this.country) {

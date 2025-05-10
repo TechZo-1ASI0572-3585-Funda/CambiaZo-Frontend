@@ -45,9 +45,10 @@ export class MyFavoritesComponent implements OnInit {
 
     this.userService.getFavoritesProducts(userId).subscribe(favorites => {
       this.favorites = favorites.map(fav => ({
-        ...fav.product,
+        product: fav.product,
         id: fav.id // usas este id para eliminar favoritos
       }));
+      console.log('Favorites:', this.favorites)
     }, error => {
       console.error('Error fetching favorites:', error);
     });
