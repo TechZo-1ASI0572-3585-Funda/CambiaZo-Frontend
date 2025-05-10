@@ -132,8 +132,8 @@ export class UsersService {
     );
   }
 
-  deleteFavoriteProduct(id: string): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/api/v2/favorite-products/delete/${id}`).pipe(
+  deleteFavoriteProduct(userId: string,id: string): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/api/v2/favorite-products/delete/${userId}/${id}`).pipe(
       catchError(this.handleError)
     );
   }
