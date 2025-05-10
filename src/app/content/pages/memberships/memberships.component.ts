@@ -39,11 +39,8 @@ export class MembershipsComponent implements OnInit {
 
   ngOnInit() {
     this.isLoggedIn = this.userService.isLogged;
-    if (this.isLoggedIn) {
       this.getUser();
-    } else {
       this.loadMemberships();
-    }
   }
 
   getUser() {
@@ -56,16 +53,13 @@ export class MembershipsComponent implements OnInit {
     }
   }
 
-  loadMemberships() {
+  loadMemberships(): void {
     this.membershipsService.getMembershipsWithBenefits().subscribe(
-      (membershipsWithBenefits: any[]) => {
-        this.memberships = membershipsWithBenefits;
-        this.filterMemberships();
-        this.dataLoaded = true; // Marcar la carga completa después de obtener las membresías
-        this.loading = false; // Ocultar pantalla de carga
+      (memberships) => {
+        this.memberships = memberships;
       },
-      error => {
-        this.loading = false; // Asegurar que la pantalla de carga se oculte en caso de error
+      (error) => {
+        console.error('Error loading memberships:', error);
       }
     );
   }

@@ -1,6 +1,7 @@
 <div class="reviews-title">
   <p>Mis reseñas:</p>
 </div>
+
 <div class="my-reviews-analytics">
   <div class="line-text">
     <div class="line"></div>
@@ -12,7 +13,9 @@
     <div class="count-score">
       <div class="stars-score">
         <ng-container *ngFor="let star of getStarRating(averageScore)">
-          <img [src]="star.icon === 'star' ? 'assets/images/icons/full-star.png' : star.icon === 'star_half' ? 'assets/images/icons/half-star.png' : 'assets/images/icons/none-star.png'" alt="Star">
+          <img [src]="star.icon === 'star' ? 'assets/images/icons/full-star.png' : 
+                      star.icon === 'star_half' ? 'assets/images/icons/half-star.png' : 
+                      'assets/images/icons/none-star.png'" alt="Star">
         </ng-container>
       </div>
       <p>{{totalReviews}} Reseña(s)</p>
@@ -32,21 +35,23 @@
     <div class="line"></div>
   </div>
 </div>
+
 <div class="cards-section-title">
   <p>Opiniones destacadas:</p>
 </div>
+
 <div class="reviews-cards-container">
   <ng-container *ngFor="let review of myReviews">
     <div class="container-reviews">
       <mat-card class="example-card">
         <div mat-card-avatar class="container-image">
-          <img src="{{review.give_user_img}}">
+          <img [src]="review.setGiveUserImg || 'assets/images/default-avatar.png'" alt="User Avatar">
         </div>
         <div class="cards-text-content">
           <mat-card-header>
-            <mat-card-title>{{review.give_user_name}}</mat-card-title>
+            <mat-card-title>{{review.setGiveUserName}}</mat-card-title>
             <div class="stars">
-              <mat-icon *ngFor="let star of getStarIcons(review.score)"
+              <mat-icon *ngFor="let star of getStarIcons(review.score)" 
                         [ngClass]="{ 'star-filled': star.filled, 'star-empty': !star.filled }">
                 {{ star.icon }}
               </mat-icon>
