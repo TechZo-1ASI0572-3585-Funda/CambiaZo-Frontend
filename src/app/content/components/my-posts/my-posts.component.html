@@ -34,7 +34,7 @@
           <mat-menu #menu="matMenu">
             <button
               (click)="setPost(posts)"
-              [routerLink]="['/post/', posts.product_name + '&Id=' + posts.id]"
+              [routerLink]="['/edit/', posts.product_name + '&Id=' + posts.id]"
               mat-menu-item
               title="Editar"
             >

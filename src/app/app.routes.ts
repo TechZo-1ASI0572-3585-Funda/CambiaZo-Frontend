@@ -60,7 +60,7 @@ export const routes: Routes = [
   { path: 'donations/:ong', component: OngDetailComponent },
   { path: 'home/:products', component: FilterProductsComponent },
   { path: 'product-information/:id', component: ProductDetailsComponent },
-  { path: 'post/:postId', component: EditPostComponent },
+  { path: 'edit/:postId', component: EditPostComponent },
   { path: 'publisher-profile/:id', component: PublisherProfileDetailsComponent },
 
   /**************   Admin    *********************/

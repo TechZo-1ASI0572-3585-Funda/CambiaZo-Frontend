@@ -87,7 +87,6 @@ export class SearchProductsComponent implements OnInit{
     this.formProduct.get('cities')?.reset()
     if(this.formProduct.value.countries) {
       const selectedCountryObj = this.countries.find(c => c.name == this.formProduct.value.countries);
-        console.log(selectedCountryObj.departments)
         this.departments = selectedCountryObj.departments;
     }
 

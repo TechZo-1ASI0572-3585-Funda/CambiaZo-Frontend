@@ -82,7 +82,6 @@ export class MyPostsComponent implements OnInit {
 
   setPost(post: any) {
     this.post = post;
-    console.log(this.post);
   }
 
   protected readonly Number = Number;

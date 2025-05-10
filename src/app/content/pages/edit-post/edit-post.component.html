@@ -5,11 +5,11 @@
     <div class="section-1">
       <app-create-post-info-user-content class="section-info-contact"
                                          [boost]="post.boost"
-                                         [country]="post.location.country"
-                                         [department]="post.location.department"
-                                           [city]="post.location.district"
+                                         [country]="post.location.countryName"
+                                         [department]="post.location.departmentName"
+                                           [city]="post.location.districtName"
       ></app-create-post-info-user-content>
-      <button class="button-submit btn-desk" mat-stroked-button (click)="onPost()">Publicar</button>
+      <button class="button-submit btn-desk" mat-stroked-button (click)="onPost()">Editar</button>
     </div>
     <app-create-info-post-content class="section-info-post"
                                   [category_id]="post.category_id"
@@ -20,5 +20,5 @@
                                   [images]="post.images"
     ></app-create-info-post-content>
   </div>
-  <button class="button-submit btn-res" mat-stroked-button (click)="onPost()">Publicar</button>
+  <button class="button-submit btn-res" mat-stroked-button (click)="onPost()">Editar</button>
 </div>
