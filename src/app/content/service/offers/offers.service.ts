@@ -44,7 +44,14 @@ export class OffersService {
 
   getAllOffersByUserChangeId(id: string): Observable<Offers[]> {
     return this.http.get<Offers[]>(
-      `${this.baseUrl}/api/v2/exchanges/user-change/${id}`,
+      `${this.baseUrl}/api/v2/exchanges/userChange/${id}`,
+      this.auth()
+    );
+  }
+
+  getFinishedByUserId(id: string): Observable<Offers[]> {
+    return this.http.get<Offers[]>(
+      `${this.baseUrl}/api/v2/exchanges/finished/${id}`,
       this.auth()
     );
   }
