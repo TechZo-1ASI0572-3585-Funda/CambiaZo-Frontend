@@ -10,6 +10,7 @@ import {CountriesService} from "../../service/countries/countries.service";
 import {FormControl, FormGroup, ReactiveFormsModule} from "@angular/forms";
 import {CategoriesObjectsService} from "../../service/categories-objects/categories-objects.service";
 import {DialogEditPostComponent} from "../../../public/components/dialog-edit-post/dialog-edit-post.component";
+import {FirebaseStorageService} from "../../service/firebase-storage/firebase-storage";
 
 @Component({
   selector: 'app-form-edit-post',
@@ -55,12 +56,11 @@ export class FormEditPostComponent implements OnInit{
   boost= new FormControl();
 
   districts:any[] = [];
-  constructor(private dialogEditPost: MatDialog,private categoriesService:CategoriesObjectsService,private countriesService:CountriesService,private userService:UsersService, private postService:PostsService,private route: ActivatedRoute){ /**private readonly imgbbService:ImgbbService */
+  constructor(private dialogEditPost: MatDialog,private categoriesService:CategoriesObjectsService,private countriesService:CountriesService,private userService:UsersService, private postService:PostsService,private route: ActivatedRoute, private storageService: FirebaseStorageService){
     this.route.params.subscribe(params => this.postC=(params));
     this.postC= this.postC.postId;
     const idStartIndex = this.postC.indexOf('=');
     this.id = this.postC.slice(idStartIndex + 1);
-
   }
 
   setCategory(){
@@ -143,65 +143,21 @@ export class FormEditPostComponent implements OnInit{
       });
   }
 
-  onChangeDepartment(){
-    this.districts = []
-    this.contactFormGroup.get('distrito')?.reset()
-    if(this.contactFormGroup.value.provincia){
-      const selectedDepartmentObj = this.departments.find(c => c.name === this.contactFormGroup.value.provincia);
-      this.districts = selectedDepartmentObj.cities;
-      this.contactFormGroup.value.distrito = this.districts[0];
-    }
+  onChangeDepartment() {
+    const prov = this.contactFormGroup.get('provincia')?.value;
+    this.districts = [];
+    this.contactFormGroup.get('distrito')?.reset();
+    this.departments.find(d => d.name === prov)?.cities.forEach((c: any) => this.districts.push(c));
   }
 
 
-  async onselect(e: any) {
-    if (e.target.files) {
-      Array.from(e.target.files).forEach(async (file: any) => {
-        const imageFile = e.target.files[0];
-        const url = `https://api.imgbb.com/1/upload?expiration300&key=ae6e0b3b9be3e7f4aea315fdd3233ff1&name=${imageFile.name}`;
-        const data = new FormData();
-        data.append('image', imageFile);
-        try {
-          const response = await fetch(url, {
-            method: 'post',
-            body: data
-          });
-          const responseData = await response.json();
-          this.images.push(responseData.data.url);
-          console.log(this.images);
-        } catch (error) {
-          console.error(error);
-        }
-      });
-    }
-  }
-
-  async dfsdf(e: any) {
-    if (e.target.files) {
-      const fileList = e.target.files;
-      for (let i = 0; i < fileList.length; i++) {
-
-        const file = fileList[i];
-        const url = `https://api.imgbb.com/1/upload?expiration=300&key=ae6e0b3b9be3e7f4aea315fdd3233ff1&name=${file.name}`;
-        const data = new FormData();
-        data.append('image', file);
-
-        try {
-
-          const response = await fetch(url, {
-            method: 'post',
-            body: data
-          });
-          const responseData = await response.json();
-          this.images.push(responseData.data.url);
-          console.log(this.images);
-
-
-        } catch (error) {
-          console.error(error);
-        }
-      }
-    }
+  onselect(e: any) {
+    const files = Array.from(e.target.files as FileList) as File[];
+    files.forEach(file => {
+      const { progress$, url$ } = this.storageService.uploadProductImage(file, this.id);
+      progress$.subscribe();
+      url$.subscribe(url => this.images.push(url));
+    });
   }
 
   saveChanges(){

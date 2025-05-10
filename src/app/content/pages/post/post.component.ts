@@ -1,4 +1,3 @@
-// post.component.ts
 import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatFormField } from '@angular/material/form-field';
