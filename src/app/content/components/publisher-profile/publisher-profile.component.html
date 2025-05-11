@@ -2,7 +2,7 @@
   <div class="publisher-content">
     <div class="products-from-publisher">
       <section class="title-publisher"><h1>Perfil de {{ user?.name }}</h1></section>
-      <section class="subtitle-publisher"><h1>Últimos trueques publicados</h1></section>
+      <section class="subtitle-publisher"><h1>Últimos productos publicados</h1></section>
       <div class="container-card">
         <ng-container *ngFor="let product of userProducts">
           <mat-card class="example-card" [routerLink]="['/product-information', product.id]">

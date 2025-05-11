@@ -52,29 +52,34 @@ export class EditPostComponent implements OnInit {
   }
 
   onPost(): void {
-    const infoProduct = this.createInfoPostContentComponent.onSubmit();
+    const infoProduct   = this.createInfoPostContentComponent.onSubmit();
     const contactProduct = this.createPostInfoUserContentComponent.onSubmit();
-    if (infoProduct && contactProduct) {
-      this.createInfoPostContentComponent.uploadImage().then((images: string[]) => {
-        this.productsService.getDistrictId(this.post.location.districtName).subscribe(districtId => {
+    if (!infoProduct || !contactProduct) return;
+
+    this.createInfoPostContentComponent.uploadImage().then(uploaded => {
+      const imageToSend = uploaded.length ? uploaded[0] : this.post.images[0];
+
+      this.productsService.getDistrictId(this.post.location.districtName)
+        .subscribe(districtId => {
           const newProduct = {
-            name: infoProduct.product_name,
-            description: infoProduct.description,
-            desiredObject: infoProduct.change_for,
-            price: infoProduct.price,
-            image: this.post.images[0],
-            boost: contactProduct.boost,
-            available: true,
-            productCategoryId: Number(infoProduct.category_id),
-            userId: Number(localStorage.getItem('id')),
+            name:               infoProduct.product_name,
+            description:        infoProduct.description,
+            desiredObject:      infoProduct.change_for,
+            price:              infoProduct.price,
+            image:              imageToSend,
+            boost:              contactProduct.boost,
+            available:          true,
+            productCategoryId:  Number(infoProduct.category_id),
+            userId:             Number(localStorage.getItem('id')),
             districtId
           };
-          this.productsService.putProduct(Number(this.post.id), newProduct).subscribe(() => this.successEdition());
-        });
-      });
-    }
-  }
 
+          this.productsService
+            .putProduct(Number(this.post.id), newProduct)
+            .subscribe(() => this.successEdition());
+        });
+    });
+  }
   successEdition(): void {
     const ref = this.dialog.open(DialogSuccessfulProductEditionComponent, { disableClose: true });
     ref.afterClosed().subscribe(() => this.router.navigateByUrl('/profile/my-posts'));

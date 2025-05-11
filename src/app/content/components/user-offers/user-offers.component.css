@@ -56,6 +56,11 @@ button.active {
   color: #FFD146;
 }
 
+app-message-box-component {
+  display: block;
+  margin-bottom: 2rem;
+}
+
 @media screen and (max-width: 1150px) {
   .user-offers-title {
     padding-top: 2rem;

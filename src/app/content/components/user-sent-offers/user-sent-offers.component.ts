@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import { OffersService } from '../../service/offers/offers.service';
 import { PostsService} from "../../service/posts/posts.service";
 import { UsersService } from '../../service/users/users.service';
@@ -35,25 +35,26 @@ import {map} from "rxjs/operators";
 })
 export class UserSentOffersComponent implements OnInit{
   offers: any[] = [];
-
+  @Output() checkEmpty = new EventEmitter<boolean>();
 
   constructor(private offersService: OffersService, private postsService: PostsService, private usersService: UsersService) { }
 
   ngOnInit() {
     this.getAllOffers();
   }
+
   getAllOffers(): void {
     const userId = localStorage.getItem('id');
     if (!userId) return;
 
-    this.offersService
-      .getAllOffersByUserOwnId(userId)
+    this.offersService.getAllOffersByUserChangeId(userId)
       .pipe(
-        switchMap((list: any[]) =>
-          forkJoin(
+        switchMap((list: any[]) => {
+          this.checkEmpty.emit(list.length === 0);
+          return forkJoin(
             list.map(ex =>
               forkJoin({
-                prodOwn:    this.postsService.getProductById(ex.productOwn.id),
+                prodOwn: this.postsService.getProductById(ex.productOwn.id),
                 prodChange: this.postsService.getProductById(ex.productChange.id),
                 userChange: this.usersService.getUserById(ex.userChange.id)
               }).pipe(
@@ -65,17 +66,20 @@ export class UserSentOffersComponent implements OnInit{
                     ex.status
                   );
                   o.setProductOffers = prodOwn;
-                  o.setProductGet    = prodChange;
-                  o.setUserGet       = userChange;
+                  o.setProductGet = prodChange;
+                  o.setUserGet = userChange;
                   return o;
                 })
               )
             )
-          )
-        )
+          );
+        })
       )
-      .subscribe(result => (this.offers = result));
+      .subscribe(result => {
+        this.offers = result;
+      });
   }
+
   getStatusStyles(status: string) {
     let styles = {};
     switch (status) {

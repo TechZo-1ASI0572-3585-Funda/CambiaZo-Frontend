@@ -186,6 +186,7 @@ export class EditProfileComponent implements OnInit {
 
   closeSession() {
     localStorage.removeItem('id');
+    localStorage.removeItem('token');
     this.router.navigateByUrl('/login').then(() => {
       window.location.reload();
     });
