@@ -32,6 +32,7 @@ import { BuyMembershipComponent } from "./content/pages/buy-membership/buy-membe
 import { EditPostComponent } from "./content/pages/edit-post/edit-post.component";
 import {CompleteExchangesComponent} from "./content/components/complete-exchanges/complete-exchanges.component";
 import {PublisherProfileDetailsComponent} from "./content/pages/publisher-profile-details/publisher-profile-details.component";
+import {authGuard} from "./guards/auth.guard";
 
 export const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -47,7 +48,7 @@ export const routes: Routes = [
   { path: 'change-password', component: ChangePasswordComponent },
   { path: 'contact', component: ContactComponent },
   { path: 'help', component: AssistComponent },
-  { path: 'profile', component: OwnProfileComponent, children: [
+  { path: 'profile', component: OwnProfileComponent, canActivate:[authGuard], children: [
       { path: '', redirectTo: 'my-posts', pathMatch: 'full' },
       { path: 'my-posts', component: MyPostsComponent },
       { path: 'offers', component: UserOffersComponent },
@@ -56,7 +57,7 @@ export const routes: Routes = [
       { path: 'reviews', component: MyReviewsComponent },
     ]
   },
-  { path: 'profile/edit', component: EditProfileComponent },
+  { path: 'profile/edit', component: EditProfileComponent, canActivate:[authGuard]},
   { path: 'donations/:ong', component: OngDetailComponent },
   { path: 'home/:products', component: FilterProductsComponent },
   { path: 'product-information/:id', component: ProductDetailsComponent },

@@ -32,6 +32,7 @@ export class MyReviewsComponent implements OnInit {
     private userService: UsersService,
     private reviewService: ReviewsService
   ) {}
+
   ngOnInit() {
     this.getUser();
     this.getMyReviews();
@@ -50,28 +51,20 @@ export class MyReviewsComponent implements OnInit {
     this.reviewService.getReviewsByReceptor(userId).subscribe((res: any[]) => {
       this.myReviews = res;
       this.totalReviews = res.length;
-
-      this.myReviews.forEach((review: any) => {
-        this.userService
-          .getUserById(Number(review.give_user_id))
-          .subscribe((user: any) => {
-            review.setGiveUserName = user.name;
-            review.setGiveUserImg = user.profilePicture; // o 'img' si así se llama
-          });
       });
 
       for (let i = 5; i >= 1; i--) {
-        const count = this.myReviews.filter((r: any) => r.score === i).length;
+        const count = this.myReviews.filter((r: any) => r.rating === i).length;
         const percentage = (count / this.totalReviews) * 100;
         this.ratings.push({ score: i, percentage });
       }
 
       this.averageScore =
         this.totalReviews > 0
-          ? this.myReviews.reduce((acc: number, r: any) => acc + r.score, 0) /
+          ? this.myReviews.reduce((acc: number, r: any) => acc + r.rating, 0) /
             this.totalReviews
           : 0;
-    });
+
   }
   getStarIcons(score: number): { icon: string; filled: boolean }[] {
     const starIcons: { icon: string; filled: boolean }[] = [];
