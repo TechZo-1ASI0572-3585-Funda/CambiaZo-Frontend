@@ -12,10 +12,17 @@
   </nav>
 
   <div class="container-button">
-    <button  class="button-login" (click)="onCallCreatePost()">Publicar</button>
+    <button class="button-login" (click)="onCallCreatePost()">Publicar</button>
     <button *ngIf="!userService.isLogged" class="button-register" routerLink="/login">Iniciar Sesión</button>
     <div *ngIf="userService.isLogged" mat-card-avatar class="container-img-profile" routerLink="/profile">
-      <img [src]="user.profilePicture">
+      <div *ngIf="!isImageLoaded" class="skeleton-avatar"></div>
+      <img
+        [src]="user.profilePicture"
+        (load)="isImageLoaded = true"
+        [class.profile-loaded]="isImageLoaded"
+        class="profile-img"
+        alt="User profile"
+      >
     </div>
   </div>
 
