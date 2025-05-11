@@ -5,43 +5,7 @@
   <div class="line"></div>
 </div>
 <div class="complete__container">
-  <ng-container *ngFor="let sent of offers; let i = index">
-    <mat-card *ngIf="sent.status == 'Aceptado'" class="example-card">
-      <div class="exchange__info">
-        <div class="product__offer">
-          <img class="card__img" src="{{ sent.product_offers?.images }}">
-          <p class="offer__text">Ofreciste un {{ sent.product_offers?.product_name }}</p>
-        </div>
-        <img class="arrows" src="./assets/images/icons/arrows.svg" alt="">
-        <div class="product__get">
-          <img class="card__img" [src]="sent.product_get?.image" alt="Producto obtenido">
-          <p class="get__text">Conseguiste un {{ sent.product_get?.product_name }}</p>
-        </div>
-      </div>
-      <div class="review__info">
-        <p class="question">¿Quieres puntuar la comunicación con {{ sent.user_get?.name }}?</p>
-        <div class="qualification">
-          <p class="point">Puntuación:</p>
-          <div class="star-rating">
-            <mat-icon *ngFor="let icon of maxRatingArr; let indexRate = index"
-                      (mouseenter)="HandleMouseEnter(indexRate, i)"
-                      (mouseleave)="HandleMouseLeave(i)"
-                      (click)="Rating(indexRate, i)"
-                      [ngClass]="{checked: selectedStar[i] > indexRate}">
-              star
-            </mat-icon>
-          </div>
-        </div>
-        <p class="suggest">Deja una reseña y comparte tu experiencia con {{ sent.user_get?.name }}:</p>
-        <textarea [(ngModel)]="inputs[i]" class="review__text" placeholder="Escribe aquí..."></textarea>
-        <button class="send__review"
-                (click)="sendReview(i, sent.user_get?.id, sent.id )">
-          Publicar
-        </button>
-      </div>
-    </mat-card>
-  </ng-container>
-  <ng-container *ngFor="let sent of this.offers2; let j = index">
+  <ng-container *ngFor="let sent of this.offers; let j = index">
     <mat-card *ngIf="sent.status == 'Aceptado'" class="example-card">
       <div class="exchange__info">
         <div class="product__offer">
@@ -69,9 +33,14 @@
           </div>
         </div>
         <p class="suggest">Deja una reseña y comparte tu experiencia con {{ sent.userChange.name }}:</p>
-        <textarea [(ngModel)]="inputs[j]" class="review__text" placeholder="Escribe aquí..."></textarea>
+        <textarea [(ngModel)]="inputs[j]"
+                  class="review__text"
+                  placeholder="Escribe aquí..."
+                  [disabled]="sent.reviewSate"
+        ></textarea>
         <button class="send__review"
-                (click)="sendReview(j, sent.userChange.id, sent.id)">
+                (click)="sendReview(j, sent.userChange.id, sent.id)"
+                [disabled]="sent.reviewSate">
           Publicar
         </button>
       </div>
