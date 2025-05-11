@@ -4,14 +4,13 @@ import { MatIconModule} from "@angular/material/icon";
 import {UsersService} from "../../service/users/users.service";
 import {PostsService} from "../../service/posts/posts.service";
 import {NgForOf, NgIf} from "@angular/common";
-import {Products} from "../../model/products/products.model";
 import {MatMenuModule} from "@angular/material/menu";
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconButton} from "@angular/material/button";
 import {RouterLink} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
 import {DialogDeletePostComponent} from "../../../public/components/dialog-delete-post/dialog-delete-post.component";
-import {DialogEditPostComponent} from "../../../public/components/dialog-edit-post/dialog-edit-post.component";
+import {FlatProduct} from "../../model/flat-product/flat-product";
 
 @Component({
   selector: 'app-my-posts',
@@ -32,7 +31,7 @@ import {DialogEditPostComponent} from "../../../public/components/dialog-edit-po
 })
 export class MyPostsComponent implements OnInit {
   user : any = {};
-  items: Products[] = []; // corregido: se especifica que items es un array de Products
+  items: FlatProduct[] = []; // corregido: se especifica que items es un array de Products
   post: any = {};
 
   constructor(
@@ -53,17 +52,11 @@ export class MyPostsComponent implements OnInit {
   }
 
   getMyProducts(): void {
-    const userId = Number(localStorage.getItem('id'));
+    const userId = localStorage.getItem('id');
     if (!userId) return;
 
-    this.postService.getProductsFlatByUserId(userId).subscribe(items => {
+    this.postService.getNewProductsByUserId(parseInt(userId)).subscribe(items => {
       this.items = items;
-      this.postService.getCategoriesProducts().subscribe(cats => {
-        this.items.forEach(it => {
-          const c = cats.find((cat: any) => cat.id === it.category_id);
-          if (c) it.setCategory = c.name;
-        });
-      });
     });
   }
 
@@ -73,7 +66,7 @@ export class MyPostsComponent implements OnInit {
       if (result) {
         this.postService.deleteProduct(id).subscribe(
           res => {
-            this.items = this.items.filter((item: Products) => item.id !== String(id));
+            this.items = this.items.filter((item: FlatProduct) => item.id !== String(id));
           }
         );
       }

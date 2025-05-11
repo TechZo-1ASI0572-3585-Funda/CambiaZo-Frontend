@@ -8,7 +8,7 @@
 
 <div class="cards-container">
   <ng-container *ngFor="let posts of items">
-    <div class="container-products" *ngIf="posts.user_id == user.id">
+    <div class="container-products" *ngIf="posts.userId == user.id && posts.available ">
       <div class="container-image-products">
         <img [src]="posts.images?.[0]" />
       </div>
@@ -19,7 +19,7 @@
         </div>
 
         <mat-card-header>
-          <mat-card-title>{{ posts.product_name }}</mat-card-title>
+          <mat-card-title>{{ posts.name }}</mat-card-title>
 
           <div class="post-burger-content">
             <button
@@ -34,7 +34,7 @@
           <mat-menu #menu="matMenu">
             <button
               (click)="setPost(posts)"
-              [routerLink]="['/edit/', posts.product_name + '&Id=' + posts.id]"
+              [routerLink]="['/edit/', posts.name + '&Id=' + posts.id]"
               mat-menu-item
               title="Editar"
             >
@@ -52,7 +52,7 @@
             </button>
           </mat-menu>
 
-          <mat-card-subtitle>{{ posts.getCategory }}</mat-card-subtitle>
+          <mat-card-subtitle>{{ posts.category }}</mat-card-subtitle>
         </mat-card-header>
 
         <mat-card-content>
@@ -60,16 +60,13 @@
 
           <p class="p__information">
             <mat-icon style="color: #FFD146">place</mat-icon>
-            {{ posts.location.district || posts.location.districtName }},
-            {{ posts.location.department || posts.location.departmentName }}
+            {{ posts.location.district || posts.location.district }},
+            {{ posts.location.department || posts.location.department }}
           </p>
 
           <div class="change-for">
-            <img
-              src="./assets/images/icons/change.svg"
-              style="height: 20px; width: 20px"
-            />
-            <p>{{ posts.change_for }}</p>
+            <img src="./assets/images/icons/change.svg" style="height: 20px; width: 20px"/>
+            <p>{{ posts.desiredObject }}</p>
           </div>
         </mat-card-content>
 

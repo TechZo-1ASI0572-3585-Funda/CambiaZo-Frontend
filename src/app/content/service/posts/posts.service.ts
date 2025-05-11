@@ -156,6 +156,33 @@ export class PostsService {
       );
   }
 
+  getNewProductsByUserId(userId: number): Observable<FlatProduct[]> {
+    return this.http
+      .get<any[]>(`${this.baseUrl}/api/v2/products/user/${userId}`)
+      .pipe(
+        map(products =>
+          products.map(p => ({
+            id: p.id.toString(),
+            userId: p.user.id.toString(),
+            categoryId: p.productCategory.id.toString(),
+            category: p.productCategory.name,
+            name: p.name,
+            description: p.description,
+            desiredObject: p.desiredObject,
+            price: p.price,
+            images: [p.image],
+            boost: p.boost,
+            available: p.available,
+            location: {
+              country: p.location.countryName,
+              department: p.location.departmentName,
+              district: p.location.districtName
+            }
+          }))
+        )
+      );
+  }
+
   getProductsFlat(): Observable<FlatProduct[]> {
     return this.http.get<any[]>(`${this.baseUrl}/api/v2/products`).pipe(
       map(list =>
