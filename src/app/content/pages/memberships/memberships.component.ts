@@ -107,7 +107,7 @@ export class MembershipsComponent implements OnInit {
           subscriptionId: subscription.id
         },
         width: '400px',
-        disableClose: true
+        disableClose: false
       }).afterClosed().subscribe(success => {
         if (success) {
           this.getMembershipCurrent();

@@ -1,5 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialogContent, MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle } from '@angular/material/dialog';
+import {
+  MatDialogRef,
+  MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent,
+} from '@angular/material/dialog';
 import { MembershipsService } from '../../service/memberships/memberships.service';
 
 declare var paypal: any;
