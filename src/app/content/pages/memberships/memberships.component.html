@@ -17,7 +17,7 @@
           [disabled]="item.id == membershipCurrent.plan.id"
           [ngClass]="item.id == membershipCurrent.plan.id ? 'btn-disabled' : 'btn-primary'"
         >
-          {{ isLoggedIn ? 'Cambiar Plan' : 'Obtener Ahora' }}
+          {{ isLoggedIn ? item.id == membershipCurrent.plan.id ? 'Activo' :'Cambiar Plan' : 'Obtener Ahora' }}
         </button>
       </mat-card-actions>
       <mat-card-content>
