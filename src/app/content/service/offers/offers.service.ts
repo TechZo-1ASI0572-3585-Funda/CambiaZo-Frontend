@@ -49,8 +49,8 @@ export class OffersService {
     );
   }
 
-  getFinishedByUserId(id: string): Observable<Offers[]> {
-    return this.http.get<Offers[]>(
+  getFinishedByUserId(id: string): Observable<any[]> {
+    return this.http.get<any[]>(
       `${this.baseUrl}/api/v2/exchanges/finished/${id}`,
       this.auth()
     );

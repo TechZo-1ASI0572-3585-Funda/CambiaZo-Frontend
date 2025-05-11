@@ -12,9 +12,6 @@ export class ReviewsService {
   baseUrl= environment.baseUrl;
   constructor(private http:HttpClient) { }
 
-  getReviews(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/api/v2/reviews`);
-  }
 
   postReview(data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/api/v2/reviews`, data);
@@ -31,5 +28,5 @@ export class ReviewsService {
   getAverageReviewCount(userId: string): Observable<any> {
     return this.http.get(`${this.baseUrl}/api/v2/reviews/avarage-count/${userId}`);
   }
-  
+
 }

@@ -54,7 +54,7 @@ export class MembershipsService {
   getBenefitsByMembershipId(id: string): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/api/v2/benefits/membership/${id}`, { headers: this.headers });
   }
-  
+
   // Benefits endpoints
   getBenefits(): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/api/v2/benefits`, { headers: this.headers });
@@ -71,5 +71,10 @@ export class MembershipsService {
   getBenefitById(id: string): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/api/v2/benefits/${id}`, { headers: this.headers });
   }
+
+  getUserMembership(userId: string): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/api/v2/subscriptions/user/${userId}`, { headers: this.headers });
+  }
+
 
 }

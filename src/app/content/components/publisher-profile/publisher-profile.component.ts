@@ -55,32 +55,28 @@ export class PublisherProfileComponent implements OnInit {
     if (userId) {
       this.usersService.getUserById(Number(userId)).subscribe((data: Users) => {
         this.user = data;
+        this.loadUserProducts(userId);
         this.loadReviews(userId);
         this.loadAcceptedOffersCount(userId);
-        this.loadUserProducts(userId);
       });
     }
   }
 
   loadReviews(userId: string): void {
-    this.reviewsService.getReviews().subscribe((res: any) => {
-      this.reviews = res.map((review: any) => new Reviews(
+    this.reviewsService.getReviewsByReceptor(userId).subscribe((res: any) => {
+      this.reviews = res.map((review: any) => {
+        const r = new Reviews(
         review.id,
-        review.content,
-        review.score,
-        review.get_user_id,
-        review.give_user_id
-      ));
+        review.message,
+        review.rating,
+        review.userReceptor.id,
+        review.userAuthor.id,)
+        r.setGiveUserName = review.userAuthor.name;
+        review.userReceptor.id === parseInt(userId) ? this.myReviews.push(r) : null;
+        return r;
+      });
 
-      this.reviews.map((review: Reviews) => {
-        this.usersService.getUserById(Number(review.give_user_id)).subscribe((user: Users) => {
-          review.setGiveUserName = user.name;
-        });
-      })
-
-      this.myReviews = this.reviews.filter((review: Reviews) => review.get_user_id === userId);
       this.totalReviews = this.myReviews.length;
-
       this.calculateRatings();
       this.calculateAverageScore();
     });
@@ -88,22 +84,16 @@ export class PublisherProfileComponent implements OnInit {
 
 
   loadAcceptedOffersCount(userId: string): void {
-    this.offersService.getOffers().subscribe((offers: any) => {
-      this.acceptedOffersCount = offers.filter((offer:any) =>
-        (offer.id_user_get === userId || offer.id_user_offers === userId) && offer.status === 'Aceptado'
-      ).length;
+    this.offersService.getFinishedByUserId(userId).subscribe((offers: any) => {
+      this.acceptedOffersCount = offers.length;
     });
   }
 
   loadUserProducts(userId: string): void {
-    this.postsService.getProducts().subscribe((products: Products[]) => {
-      this.userProducts = products.filter(product => product.user_id === userId);
-    });
+    this.postsService.getProductsByUserId(parseInt(userId)).subscribe(products =>
+      this.userProducts = products
+    );
   }
-
-
-
-
 
   calculateRatings(): void {
     this.ratings = [];

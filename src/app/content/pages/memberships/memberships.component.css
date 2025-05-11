@@ -67,7 +67,7 @@ mat-card mat-card-subtitle{
   color: black;
 }
 
-mat-card mat-card-actions button{
+mat-card mat-card-actions button:enabled{
   font-family: 'Montserrat', sans-serif;
   cursor: pointer;
   transition: 0.43s;
@@ -75,13 +75,22 @@ mat-card mat-card-actions button{
   background-color: #000000;
   color: #ffffff;
 }
-.background-white button:hover{
+
+mat-card mat-card-actions button:disabled{
+  font-family: 'Montserrat', sans-serif;
+  transition: 0.43s;
+  border: 3px solid gray;
+  background-color: gray;
+  color: #ffffff;
+}
+
+.background-white button:enabled:hover{
   background-color: #FFD146;
   color: #000000;
   border: 3px solid #FFD146;
   transition: 0.43s;
 }
-.background-primary button:hover{
+.background-primary button:enabled:hover{
   background-color: #ffffff;
   color: #000000;
   border: 3px solid #ffffff;

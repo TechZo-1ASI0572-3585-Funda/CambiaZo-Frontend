@@ -35,27 +35,27 @@
         <p class="suggest">Deja una reseña y comparte tu experiencia con {{ sent.user_get?.name }}:</p>
         <textarea [(ngModel)]="inputs[i]" class="review__text" placeholder="Escribe aquí..."></textarea>
         <button class="send__review"
-                (click)="sendReview(i, sent.user_get?.id, +sent.id)">
+                (click)="sendReview(i, sent.user_get?.id, sent.id )">
           Publicar
         </button>
       </div>
     </mat-card>
   </ng-container>
-  <ng-container *ngFor="let sent of offers2; let j = index">
+  <ng-container *ngFor="let sent of this.offers2; let j = index">
     <mat-card *ngIf="sent.status == 'Aceptado'" class="example-card">
       <div class="exchange__info">
         <div class="product__offer">
-          <img class="card__img" src="{{ sent.product_offers?.images }}">
-          <p class="offer__text">Ofreciste un {{ sent.product_offers?.product_name }}</p>
+          <img class="card__img" src="{{ sent.productOwn.image }}">
+          <p class="offer__text">Ofreciste un {{ sent.productOwn.name }}</p>
         </div>
         <img class="arrows" src="./assets/images/icons/arrows.svg" alt="">
         <div class="product__get">
-          <img class="card__img" src="{{ sent.product_get?.images }}">
-          <p class="get__text">Conseguiste un {{ sent.product_get?.product_name }}</p>
+          <img class="card__img" src="{{ sent.productChange.image }}">
+          <p class="get__text">Conseguiste un {{ sent.productChange.name }}</p>
         </div>
       </div>
       <div class="review__info">
-        <p class="question">¿Quieres puntuar la comunicación con {{ sent.user_get?.name }}?</p>
+        <p class="question">¿Quieres puntuar la comunicación con {{ sent.userChange.name }}?</p>
         <div class="qualification">
           <p class="point">Puntuación:</p>
           <div class="star-rating">
@@ -68,10 +68,10 @@
             </mat-icon>
           </div>
         </div>
-        <p class="suggest">Deja una reseña y comparte tu experiencia con {{ sent.user_get?.name }}:</p>
+        <p class="suggest">Deja una reseña y comparte tu experiencia con {{ sent.userChange.name }}:</p>
         <textarea [(ngModel)]="inputs[j]" class="review__text" placeholder="Escribe aquí..."></textarea>
         <button class="send__review"
-                (click)="sendReview(j, sent.user_get?.id, +sent.id)">
+                (click)="sendReview(j, sent.userChange.id, sent.id)">
           Publicar
         </button>
       </div>

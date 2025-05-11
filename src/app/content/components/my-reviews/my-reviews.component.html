@@ -13,8 +13,8 @@
     <div class="count-score">
       <div class="stars-score">
         <ng-container *ngFor="let star of getStarRating(averageScore)">
-          <img [src]="star.icon === 'star' ? 'assets/images/icons/full-star.png' : 
-                      star.icon === 'star_half' ? 'assets/images/icons/half-star.png' : 
+          <img [src]="star.icon === 'star' ? 'assets/images/icons/full-star.png' :
+                      star.icon === 'star_half' ? 'assets/images/icons/half-star.png' :
                       'assets/images/icons/none-star.png'" alt="Star">
         </ng-container>
       </div>
@@ -45,20 +45,20 @@
     <div class="container-reviews">
       <mat-card class="example-card">
         <div mat-card-avatar class="container-image">
-          <img [src]="review.setGiveUserImg || 'assets/images/default-avatar.png'" alt="User Avatar">
+          <img [src]="review.userAuthor.profilePicture || 'assets/images/default-avatar.png'" alt="User Avatar">
         </div>
         <div class="cards-text-content">
           <mat-card-header>
-            <mat-card-title>{{review.setGiveUserName}}</mat-card-title>
+            <mat-card-title>{{review.userAuthor.name}}</mat-card-title>
             <div class="stars">
-              <mat-icon *ngFor="let star of getStarIcons(review.score)" 
+              <mat-icon *ngFor="let star of getStarIcons(review.rating)"
                         [ngClass]="{ 'star-filled': star.filled, 'star-empty': !star.filled }">
                 {{ star.icon }}
               </mat-icon>
             </div>
           </mat-card-header>
           <mat-card-content>
-            <p>{{review.content}}</p>
+            <p>{{review.message}}</p>
           </mat-card-content>
         </div>
       </mat-card>
