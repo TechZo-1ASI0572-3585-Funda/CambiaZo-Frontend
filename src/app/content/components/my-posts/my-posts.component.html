@@ -10,12 +10,12 @@
   <ng-container *ngFor="let posts of items">
     <div class="container-products" *ngIf="posts.userId == user.id && posts.available ">
       <div class="container-image-products">
-        <img [src]="posts.images?.[0]" />
+        <img [src]="posts.images[0]" />
       </div>
 
       <mat-card class="example-card">
         <div class="container-image-products-responsive">
-          <img [src]="posts.images?.[0]" />
+          <img [src]="posts.images[0]" />
         </div>
 
         <mat-card-header>
