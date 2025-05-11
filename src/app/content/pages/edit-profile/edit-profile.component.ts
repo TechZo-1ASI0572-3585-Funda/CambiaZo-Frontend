@@ -99,34 +99,41 @@ export class EditProfileComponent implements OnInit {
         profilePicture: this.user.profilePicture
       });
 
-      this.getMembership();
+      this.getMembershipCurrent();
     });
   }
 
 
-  getMembership() {
-    this.membershipService.getUserMembership(this.user.id).subscribe((data) => {
-      this.membership = data.plan;
-    });
+  getMembershipCurrent() {
+    const userId = localStorage.getItem('id');
+    if (userId) {
+      this.membershipService.getUserMembership(userId).subscribe((data) => {
+        this.membership = {
+          id: data.id,
+          name: data.plan.name,
+          price: data.plan.price
+        };
+      });
+    }
   }
 
   cancelMembership() {
-    const dialogRef = this.dialog.open(DialogCancelMembershipComponent);
+    const litePlanId = 1;
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result === 'confirm') {
-        const newMembership = 1;
-        const userId = localStorage.getItem('id');
-        if (userId && newMembership) {
-          this.userService.changeMembership(Number(userId), newMembership).subscribe(
-            response => {
-              window.location.reload();
-            }
-          );
-        }
+    const body = {
+      state: 'Activo',
+      planId: litePlanId,
+      userId: this.user.id
+    };
 
+    this.membershipService.putSubscriptionStatus(this.membership.id, body).subscribe({
+      next: () => {
+        this.getMembershipCurrent();
+      },
+      error: err => {
+        console.error('Error al cancelar suscripción:', err);
       }
-    })
+    });
   }
 
   onSubmit() {

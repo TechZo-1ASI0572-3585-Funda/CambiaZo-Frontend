@@ -19,6 +19,10 @@ export class MembershipsService {
     return this.http.get<Memberships[]>(`${this.baseUrl}/api/v2/plans`);
   }
 
+  putSubscriptionStatus(subscriptionId: number, body: { state: string, planId: number, userId: number }): Observable<any> {
+    return this.http.put(`${this.baseUrl}/api/v2/subscriptions/status/${subscriptionId}`, body, { headers: this.headers });
+  }
+
   getMembershipsWithBenefits(): Observable<Memberships[]> {
     return this.http.get<any[]>(`${this.baseUrl}/api/v2/plans`).pipe(
       map((memberships: any[]) => {

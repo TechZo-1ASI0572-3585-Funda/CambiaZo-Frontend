@@ -9,6 +9,9 @@ import { MatDialog } from "@angular/material/dialog";
 import { Router } from '@angular/router';
 import {forkJoin, throwIfEmpty} from "rxjs";
 import { Users } from "../../model/users/users.model";
+import {DialogPaypalComponent} from "../../components/dialog-paypal/dialog-paypal.component";
+
+declare var paypal: any;
 
 @Component({
   selector: 'app-memberships',
@@ -22,12 +25,14 @@ import { Users } from "../../model/users/users.model";
   templateUrl: './memberships.component.html',
   styleUrls: ['./memberships.component.css']
 })
+
 export class MembershipsComponent implements OnInit {
 
   memberships: Memberships[] = [];
   membershipCurrent: any;
   user: Users | null = null;
   isLoggedIn: boolean = false;
+  showPayPalFor: string | null = null;
   dataLoaded: boolean = false;
   loading: boolean = true;
 
@@ -87,11 +92,27 @@ export class MembershipsComponent implements OnInit {
     if (!this.isLoggedIn) {
       this.dialogLoginRegister.open(DialogLoginRegisterComponent, { disableClose: true });
     } else {
-      if (this.user && this.user.membership === membershipId) {
-        // Add your logic here if the user is already on the selected membership
-      } else {
-        this.router.navigateByUrl(`/memberships/buy-membership&${membershipId}`);
-      }
+      const selected = this.memberships.find(m => m.id === membershipId);
+      if (!selected || !this.user) return;
+
+      const subscription = this.membershipCurrent;
+
+      this.dialogLoginRegister.open(DialogPaypalComponent, {
+        data: {
+          id: selected.id,
+          name: selected.name,
+          price: selected.price,
+          planId: selected.id,
+          userId: this.user.id,
+          subscriptionId: subscription.id
+        },
+        width: '400px',
+        disableClose: true
+      }).afterClosed().subscribe(success => {
+        if (success) {
+          this.getMembershipCurrent();
+        }
+      });
     }
   }
 
