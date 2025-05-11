@@ -42,6 +42,10 @@ export class HeaderContentComponent implements OnInit{
     this.checkToken()
   }
 
+  openHome(){
+    this.router.navigateByUrl('home')
+  }
+
   checkToken(){
     const token = localStorage.getItem('id');
     if(token){

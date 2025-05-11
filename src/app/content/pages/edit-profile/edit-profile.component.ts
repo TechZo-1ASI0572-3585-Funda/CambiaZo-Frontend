@@ -62,6 +62,7 @@ export class EditProfileComponent implements OnInit {
   changePasswordError: string | null = null;
   changePasswordSuccess: string | null = null;
   membership:  any = {};
+  permittedCancelPlan = false;
 
   constructor(private fb: FormBuilder, private userService: UsersService, private membershipService: MembershipsService, private router: Router, private dialog: MatDialog,) {
     this.editProfileForm = this.fb.group({
@@ -113,6 +114,7 @@ export class EditProfileComponent implements OnInit {
           name: data.plan.name,
           price: data.plan.price
         };
+        this.permittedCancelPlan = data.plan.id != 0;
       });
     }
   }
