@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {
   MatCard,
   MatCardAvatar,
@@ -41,6 +41,7 @@ import {of} from "rxjs";
   styleUrl: './user-get-offers.component.css'
 })
 export class UserGetOffersComponent implements OnInit {
+  @Output() checkEmpty = new EventEmitter<boolean>();
 
   offers: Offers[] = [];
 
@@ -62,25 +63,24 @@ export class UserGetOffersComponent implements OnInit {
     this.offersService
       .getAllOffersByUserChangeId(userId)
       .subscribe((data: any[]) => {
-        // resetea array y mapea sólo 'Pendiente'
-        this.offers = data
-          .filter(o => o.status === 'Pendiente')
-          .map(o => {
-            const offer = new Offers(
-              o.id.toString(),
-              o.productChange.id.toString(),
-              o.productOwn.id.toString(),
-              o.status
-            );
+        const filtered = data.filter(o => o.status === 'Pendiente');
+        this.checkEmpty.emit(filtered.length === 0);
 
-            offer.setProductOffers = o.productChange;
-            offer.setProductGet    = o.productOwn;
-            offer.user_offer       = o.userChange;
-
-            return offer;
-          });
+        this.offers = filtered.map(o => {
+          const offer = new Offers(
+            o.id.toString(),
+            o.productChange.id.toString(),
+            o.productOwn.id.toString(),
+            o.status
+          );
+          offer.setProductOffers = o.productChange;
+          offer.setProductGet    = o.productOwn;
+          offer.user_offer       = o.userChange;
+          return offer;
+        });
       });
   }
+
 
   setStatusAccepted(offerId: string) {
     this.offersService.updateOfferStatus(offerId, 'Aceptado').subscribe(() => {

@@ -9,6 +9,7 @@ import { MatIconButton } from "@angular/material/button";
 import { RouterLink } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
 import { DialogDeletePostFavoritesComponent } from "../../../public/components/dialog-delete-post-favorites/dialog-delete-post-favorites.component";
+import {MessageBoxComponentComponent} from "../message-box-component/message-box-component.component";
 
 @Component({
   selector: 'app-my-favorites',
@@ -22,13 +23,15 @@ import { DialogDeletePostFavoritesComponent } from "../../../public/components/d
     MatIconModule,
     MatIconButton,
     MatButtonModule,
-    RouterLink
+    RouterLink,
+    MessageBoxComponentComponent
   ],
   templateUrl: './my-favorites.component.html',
   styleUrls: ['./my-favorites.component.css']
 })
 export class MyFavoritesComponent implements OnInit {
   favorites: any[] = [];
+  checked = false;
 
   constructor(
     private userService: UsersService,
@@ -43,15 +46,19 @@ export class MyFavoritesComponent implements OnInit {
     const userId = localStorage.getItem('id');
     if (!userId) return;
 
-    this.userService.getFavoritesProducts(userId).subscribe(favorites => {
-      this.favorites = favorites.map(fav => ({
-        product: fav.product,
-        id: fav.id // usas este id para eliminar favoritos
-      }));
-      console.log('Favorites:', this.favorites)
-    }, error => {
-      console.error('Error fetching favorites:', error);
-    });
+    this.userService.getFavoritesProducts(userId).subscribe(
+      favorites => {
+        this.favorites = favorites.map(fav => ({
+          product: fav.product,
+          id: fav.id
+        }));
+        this.checked = true;
+      },
+      error => {
+        console.error('Error fetching favorites:', error);
+        this.checked = true;
+      }
+    );
   }
 
   openConfirm(id: string) {

@@ -151,18 +151,20 @@ export class RegisterComponent {
         roles: ["ROLE_USER"]
       };
 
-
-      this.usersService.register(newUser).subscribe(
-        response => {
-          this.register();
+      this.usersService.register(newUser).subscribe({
+        next: () => {
+          const ref = this.dialog.open(DialogRegisterSuccessfullyComponent);
+          ref.afterClosed().subscribe(() => {
+            window.location.href = '/login';
+          });
         },
-        error => {
-          console.error('Error registering user:', error);
+        error: err => {
+          console.error('Error registering user:', err);
         }
-      );
-
-      window.location.href = '/login';
+      });
     } else {
+      this.submitted = true;
     }
   }
+
 }
