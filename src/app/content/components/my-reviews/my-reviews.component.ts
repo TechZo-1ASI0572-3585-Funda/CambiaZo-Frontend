@@ -51,7 +51,7 @@ export class MyReviewsComponent implements OnInit {
     this.reviewService.getReviewsByReceptor(userId).subscribe((res: any[]) => {
       this.myReviews = res;
       this.totalReviews = res.length;
-      });
+
 
       for (let i = 5; i >= 1; i--) {
         const count = this.myReviews.filter((r: any) => r.rating === i).length;
@@ -65,6 +65,8 @@ export class MyReviewsComponent implements OnInit {
             this.totalReviews
           : 0;
 
+    });
+
   }
   getStarIcons(score: number): { icon: string; filled: boolean }[] {
     const starIcons: { icon: string; filled: boolean }[] = [];
@@ -77,6 +79,8 @@ export class MyReviewsComponent implements OnInit {
     }
     return starIcons;
   }
+
+
   getStarRating(score: number): { icon: string }[] {
     const starRating: { icon: string }[] = [];
     const fullStars = Math.floor(score);
