@@ -75,6 +75,14 @@
 
         <mat-card-footer>
           Valor aproximado s/.{{ posts.price }}
+
+          <span *ngIf="posts.available" class="status-label active">
+    <mat-icon>check_circle</mat-icon> Activo
+  </span>
+
+          <span *ngIf="!posts.available" class="status-label inactive">
+    <mat-icon>block</mat-icon> No Activo
+  </span>
         </mat-card-footer>
       </mat-card>
     </div>

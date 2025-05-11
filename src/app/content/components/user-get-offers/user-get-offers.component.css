@@ -19,6 +19,15 @@ h1,h2,h3,h4,h5,h6,p{
   display: flex;
   align-items: center;
 }
+.product-name {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #000000;
+  margin: 0.5rem 0;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
 .header-product-name h1{
   font-size: 1.8rem;
   font-weight: bold;
