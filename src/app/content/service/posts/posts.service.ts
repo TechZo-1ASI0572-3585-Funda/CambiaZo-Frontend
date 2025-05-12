@@ -283,16 +283,8 @@ export class PostsService {
       );
   }
   getCategoriesProducts(): Observable<any[]> {
-    return this.http
-      .get<any[]>(`${this.baseUrl}/api/v2/product-categories`)
-      .pipe(
-        map(categories =>
-          categories
-            ? categories.map(category => ({ ...category, name: category.name }))
-            : []
-        ),
-        catchError(() => of([]))
-      );
+    return this.http.get<any[]>(`${this.baseUrl}/api/v2/product-categories`)
+
   }
 
   postCategoryProduct(data: any): Observable<any> {

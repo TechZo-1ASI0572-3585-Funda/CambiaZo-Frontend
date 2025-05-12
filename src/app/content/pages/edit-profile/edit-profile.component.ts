@@ -15,16 +15,10 @@ import {MatDialog} from "@angular/material/dialog";
 import {
   DialogSuccessfullyChangeComponent
 } from "../../components/dialog-successfully-change/dialog-successfully-change.component";
-import {
-  DialogCancelMembershipComponent
-} from "../../components/dialog-cancel-membership/dialog-cancel-membership.component";
-import {
-  DialogSelectProductComponent
-} from "../../../public/components/dialog-select-product/dialog-select-product.component";
+
 import {
   DialogChangeProfileComponent
 } from "../../../public/components/dialog-change-profile/dialog-change-profile.component";
-import {FirebaseStorageService} from "../../service/firebase-storage/firebase-storage";
 
 @Component({
   selector: 'app-edit-profile',

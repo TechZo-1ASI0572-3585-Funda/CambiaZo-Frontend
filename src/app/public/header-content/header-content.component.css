@@ -3,7 +3,7 @@ mat-toolbar{
   justify-content: space-between;
   font-family: 'Montserrat', sans-serif;
   font-weight: bold;
-  height: 8rem;
+  height: 5rem;
   position: fixed;
   z-index: 2;
 }
@@ -68,7 +68,7 @@ button{
 
 /**************** */
 .toolbar-template{
-  height:127px;
+  height:5rem;
   width: 100%;
 }
 .burger{

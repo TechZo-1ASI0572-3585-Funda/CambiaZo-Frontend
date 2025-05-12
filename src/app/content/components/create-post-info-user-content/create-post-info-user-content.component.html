@@ -12,36 +12,36 @@
     <input matInput [value]="user?.phoneNumber" disabled><br>
 
     <mat-label>País</mat-label>
-    <select formControlName="country" (change)="onCountryChange()">
-      <option [ngValue]="null" selected [hidden]="!formProduct.value.country">{{!formProduct.value.country ? '' : '..'}}</option>
-      <option *ngFor="let country of countries" [ngValue]="country.name">{{country.name}}</option>
+    <select formControlName="countryId" (change)="onCountryChange()">
+      <option [ngValue]="null" selected [hidden]="!formProduct.value.countryId">{{!formProduct.value.countryId ? '' : '..'}}</option>
+      <option *ngFor="let country of countries" [ngValue]="country.id" >{{country.name}}</option>
     </select>
     <div>
-      <span *ngIf="formProduct.get('country')?.invalid && formProduct.get('country')?.touched">
+      <span *ngIf="formProduct.get('countryId')?.invalid && formProduct.get('countryId')?.touched">
         *Seleccion requerida
       </span>
     </div>
 
     <mat-label>Departamentos</mat-label>
-    <select formControlName="department" (change)="onDepartmentChange()">
-      <option [ngValue]="null" selected [hidden]="!formProduct.value.department">{{!formProduct.value.department ? '' : '..'}}</option>
+    <select formControlName="departmentId" (change)="onDepartmentChange()">
+      <option [ngValue]="null" selected [hidden]="!formProduct.value.departmentId">{{!formProduct.value.departmentId ? '' : '..'}}</option>
       <option *ngIf="!departments.length" disabled>No hay departamentos disponibles</option>
-      <option *ngFor="let department of departments" [ngValue]="department.name">{{ department.name }}</option>
+      <option *ngFor="let department of departments" [ngValue]="department.id">{{ department.name }}</option>
     </select>
     <div>
-      <span *ngIf="formProduct.get('department')?.invalid && formProduct.get('department')?.touched">
+      <span *ngIf="formProduct.get('departmentId')?.invalid && formProduct.get('departmentId')?.touched">
         *Seleccion requerida
       </span>
     </div>
 
     <mat-label>Ciudades</mat-label>
-    <select formControlName="district">
-      <option [ngValue]="null" selected [hidden]="!formProduct.value.district">{{!formProduct.value.district ? '' : '..'}}</option>
-      <option *ngIf="!cities.length" disabled>No hay ciudades disponibles</option>
-      <option *ngFor="let city of cities" [ngValue]="city">{{city}}</option>
+    <select formControlName="districtId">
+      <option [ngValue]="null" selected [hidden]="!formProduct.value.districtId">{{!formProduct.value.districtId ? '' : '..'}}</option>
+      <option *ngIf="!districts.length" disabled>No hay ciudades disponibles</option>
+      <option *ngFor="let district of districts" [ngValue]="district.id">{{district.name}}</option>
     </select>
     <div>
-      <span *ngIf="formProduct.get('district')?.invalid && formProduct.get('district')?.touched">
+      <span *ngIf="formProduct.get('districtId')?.invalid && formProduct.get('districtId')?.touched">
         *Seleccion requerida
       </span>
     </div>

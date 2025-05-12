@@ -4,6 +4,7 @@ import {FooterContentComponent} from "./public/footer-content/footer-content.com
 import {HeaderContentComponent} from "./public/header-content/header-content.component";
 import { Router, NavigationEnd } from '@angular/router';
 import {NgIf} from "@angular/common";
+import {CambiazoStateService} from "./content/states/cambiazo-state.service";
 
 @Component({
   selector: 'app-root',
@@ -23,7 +24,7 @@ export class AppComponent {
   }
 
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private cambiazoState: CambiazoStateService) {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.showNavFooter = !(event.url === '/login'|| event.url === '/register'|| event.url.startsWith('/admin')|| event.url.startsWith('/memberships/')|| event.url === '/verify-email' || event.url === '/change-password'|| event.url === '/buy-membership');

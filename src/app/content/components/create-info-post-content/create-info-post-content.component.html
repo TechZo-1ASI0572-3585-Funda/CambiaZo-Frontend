@@ -5,7 +5,7 @@
     <mat-label>Categorias</mat-label>
     <select formControlName="category_id">
       <option  [ngValue]="null" [hidden]="!formProduct.value.category_id" selected>{{!formProduct.value.category_id ? '' : '..'}}</option>
-      <option  *ngFor="let category of categories" [ngValue]='category.id'>{{ category.name }}</option>
+      <option  *ngFor="let category of this.categories" [ngValue]='category.id'>{{ category.name }}</option>
     </select>
     <div>
       <span *ngIf="formProduct.get('category_id')?.invalid && formProduct.get('category_id')?.touched">

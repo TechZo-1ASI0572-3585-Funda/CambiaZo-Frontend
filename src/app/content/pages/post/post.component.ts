@@ -1,8 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { MatFormField } from '@angular/material/form-field';
-import { MatIcon } from '@angular/material/icon';
-import { MatInput } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
 import { PostsService } from '../../service/posts/posts.service';
 import { MatDialog } from '@angular/material/dialog';
