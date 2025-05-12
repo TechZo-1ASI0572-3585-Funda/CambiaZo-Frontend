@@ -36,11 +36,12 @@
         <textarea [(ngModel)]="inputs[j]"
                   class="review__text"
                   placeholder="Escribe aquí..."
-                  [disabled]="sent.reviewSate"
+                  [disabled]="sent.reviewExisted"
         ></textarea>
         <button class="send__review"
                 (click)="sendReview(j, sent.userChange.id, sent.id)"
-                [disabled]="sent.reviewSate">
+                [disabled]="sent.reviewExisted"
+        >
           Publicar
         </button>
       </div>

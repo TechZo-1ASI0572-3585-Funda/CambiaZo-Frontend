@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import {Component, EventEmitter, inject, OnInit, Output} from '@angular/core';
 import { MatDialog } from "@angular/material/dialog";
 import { OffersService } from "../../service/offers/offers.service";
 import { DialogDeniedOfferComponent } from "../../../public/components/dialog-denied-offer/dialog-denied-offer.component";
@@ -7,8 +7,9 @@ import {MatCard, MatCardAvatar, MatCardContent, MatCardFooter, MatCardHeader} fr
 import {MatIcon} from "@angular/material/icon";
 import {NgForOf} from "@angular/common";
 import {PostsService} from "../../service/posts/posts.service";
-import {map} from "rxjs/operators";
+import {filter, map} from "rxjs/operators";
 import {forkJoin} from "rxjs";
+import {CambiazoStateService} from "../../states/cambiazo-state.service";
 
 @Component({
   selector: 'app-user-get-offers',
@@ -28,10 +29,11 @@ import {forkJoin} from "rxjs";
 export class UserGetOffersComponent implements OnInit {
   @Output() checkEmpty = new EventEmitter<boolean>();
   offers: any[] = [];
+  private readonly cambiazoState: CambiazoStateService = inject(CambiazoStateService);
+  districts = this.cambiazoState.districts;
 
   constructor(
     private offersService: OffersService,
-    private postsService: PostsService,
     private dialog: MatDialog
   ) {}
 
@@ -44,24 +46,12 @@ export class UserGetOffersComponent implements OnInit {
     if (!userId) return;
 
     this.offersService.getAllOffersByUserChangeId(userId).subscribe((data: any[]) => {
-      const filtered = data.filter(o => o.status === 'Pendiente');
+      const filtered = data.filter((offer: any) => offer.status === 'Pendiente');
       this.checkEmpty.emit(filtered.length === 0);
-
-      const requests = filtered.map(offer =>
-        this.postsService.getDistrictById(offer.productChange.districtId).pipe(
-          map(district => ({
-            ...offer,
-            productChange: {
-              ...offer.productChange,
-              locationName: district.name
-            }
-          }))
-        )
-      );
-
-      forkJoin(requests).subscribe(result => {
-        this.offers = result;
-      });
+      this.offers = filtered.map((offer:any) => ({
+        ...offer,
+        districtName: this.districts().find(d => d.id === offer.productOwn.districtId)?.name,
+      }));
     });
   }
 

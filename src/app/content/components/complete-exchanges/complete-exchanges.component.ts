@@ -70,8 +70,11 @@ export class CompleteExchangesComponent implements OnInit{
           offer.userChange = temU;
         }
 
+      this.reviewService.getReviewByAuthorAndExchange(this.userId.toString(),offer.id).subscribe((res) => {
+        offer.reviewExisted = res.existReview;
+        console.log(offer);
       });
-
+      });
     });
   }
 

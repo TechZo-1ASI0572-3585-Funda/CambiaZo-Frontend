@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, inject, OnInit, Output} from '@angular/core';
 import { OffersService } from '../../service/offers/offers.service';
 import { PostsService} from "../../service/posts/posts.service";
 import { UsersService } from '../../service/users/users.service';
@@ -16,6 +16,7 @@ import {JsonPipe, NgForOf, NgStyle} from "@angular/common";
 import {Products} from "../../model/products/products.model";
 import {forkJoin, switchMap} from "rxjs";
 import {map} from "rxjs/operators";
+import {CambiazoStateService} from "../../states/cambiazo-state.service";
 
 @Component({
   selector: 'app-user-sent-offers',
@@ -36,6 +37,8 @@ import {map} from "rxjs/operators";
 export class UserSentOffersComponent implements OnInit {
   offers: any[] = [];
   @Output() checkEmpty = new EventEmitter<boolean>();
+  private readonly cambiazoState: CambiazoStateService = inject(CambiazoStateService);
+  districts = this.cambiazoState.districts;
 
   constructor(private offersService: OffersService, private postService: PostsService) {}
 
@@ -47,21 +50,11 @@ export class UserSentOffersComponent implements OnInit {
     const userId = localStorage.getItem('id');
     if (!userId) return;
 
-    this.offersService.getAllOffersByUserOwnId(userId).pipe(
-      switchMap((list: any[]) => {
-        return forkJoin(
-          list.map(offer =>
-            this.postService.getDistrictById(offer.productChange.districtId).pipe(
-              map(district => ({
-                ...offer,
-                locationName: district.name
-              }))
-            )
-          )
-        );
-      })
-    ).subscribe(result => {
-      this.offers = result;
+    this.offersService.getAllOffersByUserOwnId(userId).pipe().subscribe(result => {
+      this.offers = result.map((offer:any) => ({
+        ...offer,
+        districtName: this.districts().find(d => d.id === offer.productChange.districtId)?.name,
+      }));
     });
   }
 
@@ -71,7 +64,7 @@ export class UserSentOffersComponent implements OnInit {
         return { color: '#41DB0B', backgroundColor: '#EAFFDD', border: '1px solid #41DB0B', borderRadius: '10px', width: '8.5rem', height: '2.2rem', textAlign: 'center' };
       case 'Pendiente':
         return { color: '#FFA22A', backgroundColor: '#FFF2CC', border: '1px solid #FFA22A', borderRadius: '10px', width: '8.5rem', height: '2.2rem', textAlign: 'center' };
-      case 'Denegado':
+      case 'Rechazado':
         return { color: '#FF502A', backgroundColor: '#FFD7B9', border: '1px solid #FF502A', borderRadius: '10px', width: '8.5rem', height: '2.2rem', textAlign: 'center' };
       default:
         return {};
