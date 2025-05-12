@@ -3,7 +3,7 @@
     <div class="container-sent-offers">
       <mat-card class="sent-offers-card">
         <mat-card-header class="header-product-name">
-          <h1>{{sent.product_get?.product_name}}</h1>
+          <h1>{{sent.productChange?.name}}</h1>
         </mat-card-header>
         <mat-card-content>
           <div class="content">
@@ -11,15 +11,15 @@
               <mat-card class="card-get">
                 <mat-card-header class="header-card-get">
                   <div mat-card-avatar class="container-image">
-                    <img src="{{sent.user_get?.profilePicture}}">
+                    <img [src]="sent.userChange?.profilePicture">
                   </div>
-                  <h1>{{sent.user_get?.name}}</h1>
+                  <h1>{{sent.userChange?.name}}</h1>
                 </mat-card-header>
                 <mat-card-content class="content-card-get">
-                  <p>{{sent.product_get?.description}}</p>
+                  <p>{{sent.productChange?.description}}</p>
                 </mat-card-content>
                 <mat-card-footer class="footer-card-get">
-                  <img src="{{sent.product_get?.images}}">
+                  <img [src]="sent.productChange?.image">
                 </mat-card-footer>
               </mat-card>
             </div>
@@ -29,28 +29,28 @@
                   <div class="content-description">
                     <h1>Datos:</h1>
                     <div class="content-more-info">
-                      <p> <mat-icon style="color: #FFD146"> monetization_on</mat-icon> Valor estimado: S/.{{sent.product_get?.price}}</p>
-                      <p> <mat-icon style="color: #FFD146">place</mat-icon> {{sent.product_get?.location?.district}}, {{sent.product_get?.location?.departament}}</p>
+                      <p><mat-icon style="color: #FFD146">monetization_on</mat-icon> Valor estimado: S/.{{sent.productChange?.price}}</p>
+                      <p><mat-icon style="color: #FFD146">place</mat-icon> {{sent.locationName}}</p>
                     </div>
-                    <h1>¿Qué solicita {{sent.user_get?.name}}?</h1>
+                    <h1>¿Qué solicita {{sent.userChange?.name}}?</h1>
                     <div class="change-for">
                       <img src="./assets/images/icons/change.svg" style="height: 20px; width: 20px">
-                      <p>{{sent.product_get?.change_for}}</p>
+                      <p>{{sent.productChange?.desiredObject}}</p>
                     </div>
                     <h1>¿Qué le ofreciste?</h1>
                   </div>
                   <div class="my-offer">
                     <div class="col11">
                       <div class="product-sent-image">
-                        <img src="{{sent.product_offers?.images}}">
+                        <img [src]="sent.productOwn?.image">
                       </div>
                     </div>
                     <div class="col22">
                       <div class="product-sent-text">
-                        <h1>Ofreciste tu {{sent.product_offers?.product_name}}</h1>
-                        <h4>{{sent.product_offers?.description}}</h4>
+                        <h1>Ofreciste tu {{sent.productOwn?.name}}</h1>
+                        <h4>{{sent.productOwn?.description}}</h4>
                         <div class="footer">
-                          <h4><b>Valor aproximado s/.{{sent.product_offers?.price}}</b></h4>
+                          <h4><b>Valor aproximado s/.{{sent.productOwn?.price}}</b></h4>
                         </div>
                       </div>
                     </div>

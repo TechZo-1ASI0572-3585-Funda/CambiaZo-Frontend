@@ -29,6 +29,26 @@
   display: none;
 }
 
+.status-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 4px 10px;
+  border-radius: 6px;
+  margin-left: 12px;
+  color: #fff;
+}
+
+.status-label.active {
+  background-color: #4caf50;
+}
+
+.status-label.inactive {
+  background-color: #ff3b30;
+}
+
 .container-products{
   display: flex;
   flex-direction: row;

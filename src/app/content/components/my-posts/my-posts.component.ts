@@ -30,32 +30,24 @@ import {FlatProduct} from "../../model/flat-product/flat-product";
   styleUrl: './my-posts.component.css'
 })
 export class MyPostsComponent implements OnInit {
-  user : any = {};
   items: FlatProduct[] = []; // corregido: se especifica que items es un array de Products
   post: any = {};
+  userId = localStorage.getItem('id');
 
   constructor(
-    private userService: UsersService,
     private dialogDeletePost: MatDialog,
     private postService: PostsService
   ) {}
 
   ngOnInit() {
-    this.getUser();
     this.getMyProducts();
   }
 
-  getUser() {
-    this.userService.getUserById(Number(localStorage.getItem('id'))).subscribe((data) => {
-      this.user = data;
-    });
-  }
-
   getMyProducts(): void {
-    const userId = localStorage.getItem('id');
-    if (!userId) return;
 
-    this.postService.getNewProductsByUserId(parseInt(userId)).subscribe(items => {
+    if (!this.userId) return;
+
+    this.postService.getNewProductsByUserId(parseInt(this.userId)).subscribe(items => {
       this.items = items;
     });
   }

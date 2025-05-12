@@ -5,7 +5,7 @@
   <div class="line"></div>
 </div>
 <div class="complete__container">
-  <ng-container *ngFor="let sent of this.offers; let j = index">
+  <ng-container *ngFor="let sent of this.offers.reverse(); let j = index">
     <mat-card *ngIf="sent.status == 'Aceptado'" class="example-card">
       <div class="exchange__info">
         <div class="product__offer">

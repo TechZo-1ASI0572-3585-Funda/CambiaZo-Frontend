@@ -8,7 +8,7 @@ import {MatIcon} from "@angular/material/icon";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {CustomValidators} from "../../service/validators/validators.service";
-import {NgForOf, NgIf} from "@angular/common";
+import {NgForOf, NgIf, NgStyle} from "@angular/common";
 import {MatInput} from "@angular/material/input";
 import {DialogDeleteAccountComponent} from "../../components/dialog-delete-account/dialog-delete-account.component";
 import {MatDialog} from "@angular/material/dialog";
@@ -44,7 +44,8 @@ import {FirebaseStorageService} from "../../service/firebase-storage/firebase-st
     MatLabel,
     MatCardSubtitle,
     NgForOf,
-    MatCardFooter
+    MatCardFooter,
+    NgStyle
   ],
   templateUrl: './edit-profile.component.html',
   styleUrl: './edit-profile.component.css'
@@ -52,6 +53,8 @@ import {FirebaseStorageService} from "../../service/firebase-storage/firebase-st
 export class EditProfileComponent implements OnInit {
   user: any = {};
   editProfileForm: FormGroup;
+  isNameLoaded = false;
+  isImageLoaded = false;
   changePasswordForm: FormGroup;
   changePassword=false;
   submitted = false;
@@ -59,6 +62,7 @@ export class EditProfileComponent implements OnInit {
   changePasswordError: string | null = null;
   changePasswordSuccess: string | null = null;
   membership:  any = {};
+  permittedCancelPlan = false;
 
   constructor(private fb: FormBuilder, private userService: UsersService, private membershipService: MembershipsService, private router: Router, private dialog: MatDialog,) {
     this.editProfileForm = this.fb.group({
@@ -81,39 +85,57 @@ export class EditProfileComponent implements OnInit {
     const userId = Number(localStorage.getItem('id'));
     this.userService.getUserById(userId).subscribe((data) => {
       this.user = data;
+      const img = new Image();
+      img.src = this.user.profilePicture;
+      img.onload = () => {
+        this.isImageLoaded = true;
+      };
+
+      this.isNameLoaded = true;
+
       this.editProfileForm.patchValue({
         name: this.user.name,
         username: this.user.username,
         phoneNumber: this.user.phoneNumber,
         profilePicture: this.user.profilePicture
       });
-      this.getMembership();
+
+      this.getMembershipCurrent();
     });
   }
 
-  getMembership() {
-    this.membershipService.getMembershipById(this.user.membership).subscribe((data) => {
-      this.membership = data;
-    });
+
+  getMembershipCurrent() {
+    const userId = localStorage.getItem('id');
+    if (userId) {
+      this.membershipService.getUserMembership(userId).subscribe((data) => {
+        this.membership = {
+          id: data.id,
+          name: data.plan.name,
+          price: data.plan.price
+        };
+        this.permittedCancelPlan = data.plan.id != 0;
+      });
+    }
   }
 
   cancelMembership() {
-    const dialogRef = this.dialog.open(DialogCancelMembershipComponent);
+    const litePlanId = 1;
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result === 'confirm') {
-        const newMembership = 1;
-        const userId = localStorage.getItem('id');
-        if (userId && newMembership) {
-          this.userService.changeMembership(Number(userId), newMembership).subscribe(
-            response => {
-              window.location.reload();
-            }
-          );
-        }
+    const body = {
+      state: 'Activo',
+      planId: litePlanId,
+      userId: this.user.id
+    };
 
+    this.membershipService.putSubscriptionStatus(this.membership.id, body).subscribe({
+      next: () => {
+        this.getMembershipCurrent();
+      },
+      error: err => {
+        console.error('Error al cancelar suscripción:', err);
       }
-    })
+    });
   }
 
   onSubmit() {

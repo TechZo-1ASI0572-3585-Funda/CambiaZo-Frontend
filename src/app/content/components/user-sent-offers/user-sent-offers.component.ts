@@ -33,11 +33,11 @@ import {map} from "rxjs/operators";
   templateUrl: './user-sent-offers.component.html',
   styleUrl: './user-sent-offers.component.css'
 })
-export class UserSentOffersComponent implements OnInit{
+export class UserSentOffersComponent implements OnInit {
   offers: any[] = [];
   @Output() checkEmpty = new EventEmitter<boolean>();
 
-  constructor(private offersService: OffersService, private postsService: PostsService, private usersService: UsersService) { }
+  constructor(private offersService: OffersService, private postService: PostsService) {}
 
   ngOnInit() {
     this.getAllOffers();
@@ -47,79 +47,34 @@ export class UserSentOffersComponent implements OnInit{
     const userId = localStorage.getItem('id');
     if (!userId) return;
 
-    this.offersService.getAllOffersByUserChangeId(userId)
-      .pipe(
-        switchMap((list: any[]) => {
-          this.checkEmpty.emit(list.length === 0);
-          return forkJoin(
-            list.map(ex =>
-              forkJoin({
-                prodOwn: this.postsService.getProductById(ex.productOwn.id),
-                prodChange: this.postsService.getProductById(ex.productChange.id),
-                userChange: this.usersService.getUserById(ex.userChange.id)
-              }).pipe(
-                map(({ prodOwn, prodChange, userChange }) => {
-                  const o = new Offers(
-                    ex.id.toString(),
-                    prodOwn.id.toString(),
-                    prodChange.id.toString(),
-                    ex.status
-                  );
-                  o.setProductOffers = prodOwn;
-                  o.setProductGet = prodChange;
-                  o.setUserGet = userChange;
-                  return o;
-                })
-              )
+    this.offersService.getAllOffersByUserOwnId(userId).pipe(
+      switchMap((list: any[]) => {
+        return forkJoin(
+          list.map(offer =>
+            this.postService.getDistrictById(offer.productChange.districtId).pipe(
+              map(district => ({
+                ...offer,
+                locationName: district.name
+              }))
             )
-          );
-        })
-      )
-      .subscribe(result => {
-        this.offers = result;
-      });
+          )
+        );
+      })
+    ).subscribe(result => {
+      this.offers = result;
+    });
   }
 
   getStatusStyles(status: string) {
-    let styles = {};
     switch (status) {
       case 'Aceptado':
-        styles = {
-          'color': '#41DB0B',
-          'background-color': '#EAFFDD',
-          'border': '1px solid #41DB0B',
-          'border-radius': '10px',
-          'width' : '8.5rem',
-          'height' : '2.2rem',
-          'text-align': 'center',
-        };
-        break;
+        return { color: '#41DB0B', backgroundColor: '#EAFFDD', border: '1px solid #41DB0B', borderRadius: '10px', width: '8.5rem', height: '2.2rem', textAlign: 'center' };
       case 'Pendiente':
-        styles = {
-          'color': '#FFA22A',
-          'background-color': '#FFF2CC',
-          'border': '1px solid #FFA22A',
-          'border-radius': '10px',
-          'width' : '8.5rem',
-          'height' : '2.2rem',
-          'text-align': 'center'
-        };
-        break;
+        return { color: '#FFA22A', backgroundColor: '#FFF2CC', border: '1px solid #FFA22A', borderRadius: '10px', width: '8.5rem', height: '2.2rem', textAlign: 'center' };
       case 'Denegado':
-        styles = {
-          'color': '#FF502A',
-          'background-color': '#FFD7B9',
-          'border': '1px solid #FF502A',
-          'border-radius': '10px',
-          'width' : '8.5rem',
-          'height' : '2.2rem',
-          'text-align': 'center'
-        };
-        break;
+        return { color: '#FF502A', backgroundColor: '#FFD7B9', border: '1px solid #FF502A', borderRadius: '10px', width: '8.5rem', height: '2.2rem', textAlign: 'center' };
       default:
-        styles = {};
-        break;
+        return {};
     }
-    return styles;
   }
 }

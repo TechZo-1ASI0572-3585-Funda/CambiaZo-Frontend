@@ -11,12 +11,23 @@
     <mat-card>
       <mat-card-header>
         <div class="container-avatar">
-        <button class="button-edit-profile-image" (click)="changeImage()" mat-button><mat-icon>edit</mat-icon></button>
-          <img [src]="user.profilePicture" alt="User img" class="user-img">
+          <div *ngIf="!isImageLoaded" class="skeleton-avatar"></div>
+          <div *ngIf="isImageLoaded"
+               class="user-img-background"
+               [ngStyle]="{ 'background-image': 'url(' + user.profilePicture + ')' }">
+          </div>
+
+          <button class="button-edit-profile-image" (click)="changeImage()" mat-button>
+            <mat-icon>edit</mat-icon>
+          </button>
         </div>
       </mat-card-header>
+
       <mat-card-content class="content-header">
-        <h1>{{user.name}}</h1>
+        <h1 *ngIf="isNameLoaded; else nameSkeleton">{{user.name}}</h1>
+        <ng-template #nameSkeleton>
+          <div class="skeleton-text"></div>
+        </ng-template>
       </mat-card-content>
     </mat-card>
   </div>
@@ -140,16 +151,22 @@
               <mat-card-content class="content">
                 <mat-card-subtitle class="subtitle">
                   <p class="membership-name">{{ membership.name }}</p>
-                  <p  class="membership-price" *ngIf="membership.price === 0; else priceSection">GRATIS</p>
+                  <p class="membership-price" *ngIf="membership.price === 0; else priceSection">GRATIS</p>
                   <ng-template #priceSection>
-                    <p class="membership-price"><span class="yellow">$ &nbsp;</span>{{ membership.price }}<span class="info-price">c/mes</span></p>
+                    <p class="membership-price">
+                    </p>
                   </ng-template>
                 </mat-card-subtitle>
               </mat-card-content>
-              <mat-card-footer *ngIf="membership.price !== 0">
-                <button mat-button type="button" (click)="cancelMembership()" class="cancel-membership">
+              <mat-card-footer >
+                <button mat-button type="button" (click)="cancelMembership()" *ngIf="permittedCancelPlan" class="cancel-membership">
                   <div class="delete-account">
                     <span>Anular Suscripción</span>
+                  </div>
+                </button>
+                <button mat-button type="button" routerLink="/memberships" class="upgrade-membership">
+                  <div class="upgrade-account">
+                    <span>Cambiar plan</span>
                   </div>
                 </button>
               </mat-card-footer>

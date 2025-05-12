@@ -27,17 +27,7 @@ import {NgIf} from "@angular/common";
   templateUrl: './own-profile.component.html',
   styleUrl: './own-profile.component.css'
 })
-export class OwnProfileComponent implements OnInit{
-  user : any = {};
+export class OwnProfileComponent{
 
-  constructor(private userService:UsersService) { }
-  ngOnInit(){
-    this.getUser();
-  }
-  getUser(){
-    this.userService.getUserById(Number(localStorage.getItem('id'))).subscribe((data)=>{
-      this.user = data;
-    });
-  }
 
 }

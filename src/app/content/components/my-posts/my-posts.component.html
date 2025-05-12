@@ -1,5 +1,5 @@
 <div class="posts__first">
-  <p>Intercambios Publicados:</p>
+  <p>Productos Publicados:</p>
 </div>
 
 <div class="line-text">
@@ -8,14 +8,14 @@
 
 <div class="cards-container">
   <ng-container *ngFor="let posts of items">
-    <div class="container-products" *ngIf="posts.userId == user.id && posts.available ">
+    <div class="container-products" *ngIf="posts && posts.available ">
       <div class="container-image-products">
-        <img [src]="posts.images?.[0]" />
+        <img [src]="posts.images[0]" />
       </div>
 
       <mat-card class="example-card">
         <div class="container-image-products-responsive">
-          <img [src]="posts.images?.[0]" />
+          <img [src]="posts.images[0]" />
         </div>
 
         <mat-card-header>
@@ -72,6 +72,14 @@
 
         <mat-card-footer>
           Valor aproximado s/.{{ posts.price }}
+
+          <!-- <span *ngIf="posts.available" class="status-label active">
+            <mat-icon>check_circle</mat-icon> Activo
+          </span>
+
+          <span *ngIf="!posts.available" class="status-label inactive">
+            <mat-icon>block</mat-icon> No Activo
+          </span> -->
         </mat-card-footer>
       </mat-card>
     </div>

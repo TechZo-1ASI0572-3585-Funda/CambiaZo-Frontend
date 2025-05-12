@@ -34,10 +34,16 @@ import {MatCardAvatar} from "@angular/material/card";
 })
 export class HeaderContentComponent implements OnInit{
   user:any = {};
+  isImageLoaded = false;
+
   constructor(private router:Router,private dialogLoginRegister: MatDialog,public userService:UsersService){
   }
   ngOnInit() {
     this.checkToken()
+  }
+
+  openHome(){
+    this.router.navigateByUrl('home')
   }
 
   checkToken(){

@@ -4,7 +4,7 @@
   <mat-dialog-content>
     <div class="cards-container">
       <ng-container *ngFor="let product of items">
-        <div class="container-products">
+        <div class="container-products" *ngIf="product.available">
           <mat-card class="example-card">
             <div class="card-content">
               <div class="product-image-offer">

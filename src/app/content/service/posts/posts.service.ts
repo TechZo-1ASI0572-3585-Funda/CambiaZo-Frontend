@@ -111,8 +111,11 @@ export class PostsService {
     );
   }
 
-  deleteProduct(id: number): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/api/v2/products/delete/${id}`);
+  deleteProduct(id: number) {
+    const token = localStorage.getItem('token');
+    const headers = { Authorization: `Bearer ${token}` };
+
+    return this.http.delete(`${this.baseUrl}/products/delete/${id}`, { headers });
   }
 
   putProduct(id: number, data: any): Observable<any> {
