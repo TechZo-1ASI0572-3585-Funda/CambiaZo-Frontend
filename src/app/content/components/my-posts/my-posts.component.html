@@ -8,7 +8,7 @@
 
 <div class="cards-container">
   <ng-container *ngFor="let posts of items">
-    <div class="container-products" *ngIf="posts.userId == user.id && posts.available ">
+    <div class="container-products" *ngIf="posts && posts.available ">
       <div class="container-image-products">
         <img [src]="posts.images[0]" />
       </div>

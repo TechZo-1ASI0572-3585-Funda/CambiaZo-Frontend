@@ -34,16 +34,9 @@ export class MyReviewsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.getUser();
     this.getMyReviews();
   }
-  getUser() {
-    this.userService
-      .getUserById(Number(localStorage.getItem('id')))
-      .subscribe((data) => {
-        this.user = data;
-      });
-  }
+
   getMyReviews() {
     const userId = localStorage.getItem('id');
     if (!userId) return;
