@@ -3,13 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, forkJoin } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
+import {CountryDto} from "../../model/location/location";
 
 interface Country   { id: number; name: string; }
 interface Department{ id: number; name: string; countryId: number; }
 interface District  { id: number; name: string; departmentId: number; }
 
-interface DeptDto   { name: string; cities: string[]; }
-interface CountryDto{ name: string; departments: DeptDto[]; }
 
 @Injectable({ providedIn: 'root' })
 export class CountriesService {
@@ -42,15 +41,20 @@ export class CountriesService {
       districts:  this.getAllDistricts()
     }).pipe(
       map(({ countries, departments, districts }) =>
-        countries.map(ctry => ({
-          name: ctry.name,
+        countries.map(country => ({
+          id: country.id,
+          name: country.name,
           departments: departments
-            .filter(dep => dep.countryId === ctry.id)
+            .filter(dep => dep.countryId === country.id)
             .map(dep => ({
+              id: dep.id,
               name: dep.name,
-              cities: districts
-                .filter(d => d.departmentId === dep.id)
-                .map(d => d.name)
+              districts: districts
+                .filter(dis => dis.departmentId === dep.id)
+                .map(dis => ({
+                  id: dis.id,
+                 name: dis.name
+                }))
             }))
         }))
       )

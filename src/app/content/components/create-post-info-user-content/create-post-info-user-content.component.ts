@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {Component, effect, inject, Input, OnInit} from '@angular/core';
 import { NgForOf, NgIf } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { MatInputModule } from '@angular/material/input';
@@ -6,9 +6,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
-import { CountriesService } from '../../service/countries/countries.service';
 import { UsersService } from '../../service/users/users.service';
 import { Users } from '../../model/users/users.model';
+import {CambiazoStateService} from "../../states/cambiazo-state.service";
+import {Country} from "../../model/country/country";
+import {Department} from "../../model/department/department";
+import {District} from "../../model/district/district";
 
 @Component({
   selector: 'app-create-post-info-user-content',
@@ -29,80 +32,82 @@ import { Users } from '../../model/users/users.model';
 })
 export class CreatePostInfoUserContentComponent implements OnInit {
   @Input() boost = false;
-  @Input() country: string | null = null;
-  @Input() department: string | null = null;
-  @Input() city: string | null = null;
+  @Input() country: any | null = null;
+  @Input() department: any | null = null;
+  @Input() district: any | null = null;
+
+  private readonly stateCambiazo = inject(CambiazoStateService);
 
   countries: any[] = [];
   departments: any[] = [];
-  cities: string[] = [];
+  districts: any[] = [];
+
   user: Users | null = null;
 
   formProduct = new FormGroup({
     boost:      new FormControl(false),
-    country:    new FormControl<string | null>(null, Validators.required),
-    department: new FormControl<string | null>(null, Validators.required),
-    district:   new FormControl<string | null>(null, Validators.required)
+    countryId:    new FormControl<number | null>(null, Validators.required),
+    departmentId: new FormControl<number | null>(null, Validators.required),
+    districtId:   new FormControl<number | null>(null, Validators.required)
   });
 
   acceptPolicy = new FormControl(false, Validators.requiredTrue);
 
-  constructor(
-    private countriesService: CountriesService,
-    private usersService: UsersService
-  ) {
-
-
+  constructor( private usersService: UsersService) {
+    effect(() => {
+      this.countries = this.stateCambiazo.location();
+      this.loadCountries();
+    });
   }
 
   ngOnInit(): void {
     this.formProduct.get('boost')?.setValue(this.boost);
-    this.loadCountries(this.country, this.department, this.city);
     this.loadUser();
   }
 
   onSubmit(): any {
     this.formProduct.markAllAsTouched();
     this.acceptPolicy.markAllAsTouched();
+
     return this.formProduct.valid && this.acceptPolicy.valid
       ? this.formProduct.value
       : null;
   }
 
-  private loadCountries(country:string | null,department:string| null,city:string| null): void {
-    this.countriesService.getLocation().subscribe(res => {
-      this.countries = res;
+  private loadCountries(): void {
       if (this.country) {
-        this.formProduct.get('country')?.setValue(this.country);
+        this.formProduct.get('countryId')?.setValue(this.country.id);
         this.onCountryChange();
-        this.formProduct.get('department')?.setValue(this.department);
+        this.formProduct.get('departmentId')?.setValue(this.department.id);
         this.onDepartmentChange();
-        this.formProduct.get('district')?.setValue(this.city);
+        this.formProduct.get('districtId')?.setValue(this.district.id);
       }
-    });
   }
 
   onCountryChange(): void {
     this.departments = [];
-    this.cities = [];
-    this.formProduct.get('department')?.reset();
-    this.formProduct.get('district')?.reset();
+    this.districts = [];
+    this.formProduct.get('departmentId')?.reset();
+    this.formProduct.get('districtId')?.reset();
 
-    const selectedCountry = this.formProduct.value.country;
-    if (selectedCountry) {
-      const countryObj = this.countries.find(c => c.name === selectedCountry);
-      this.departments = countryObj?.departments ?? [];
+    const selectedCountryId = this.formProduct.value.countryId;
+    if (selectedCountryId) {
+      const selectedCountry = this.countries.find(c => c.id === selectedCountryId);
+      if (selectedCountry) {
+        this.departments = selectedCountry.departments || [];
+      }
     }
   }
 
   onDepartmentChange(): void {
-    this.cities = [];
-    this.formProduct.get('district')?.reset();
-
-    const selectedDepartment = this.formProduct.value.department;
-    if (selectedDepartment) {
-      const deptObj = this.departments.find(d => d.name === selectedDepartment);
-      this.cities = deptObj?.cities ?? [];
+    this.districts = [];
+    this.formProduct.get('districtId')?.reset();
+    const selectedDepartmentId = this.formProduct.value.departmentId;
+    if (selectedDepartmentId) {
+      const selectedDepartment = this.departments.find(d => d.id === selectedDepartmentId);
+      if (selectedDepartment) {
+        this.districts = selectedDepartment.districts || [];
+      }
     }
   }
 

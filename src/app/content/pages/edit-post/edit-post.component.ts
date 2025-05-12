@@ -9,6 +9,9 @@ import { PostsService } from '../../service/posts/posts.service';
 import { CreatePostInfoUserContentComponent } from '../../components/create-post-info-user-content/create-post-info-user-content.component';
 import { CreateInfoPostContentComponent } from '../../components/create-info-post-content/create-info-post-content.component';
 import { DialogSuccessfulProductEditionComponent } from '../../../public/components/dialog-successful-product-edition/dialog-successful-product-edition.component';
+import {Country} from "../../model/country/country";
+import {Department} from "../../model/department/department";
+import {District} from "../../model/district/district";
 
 @Component({
   selector: 'app-edit-post',
@@ -28,7 +31,11 @@ import { DialogSuccessfulProductEditionComponent } from '../../../public/compone
 export class EditPostComponent implements OnInit {
   @ViewChild(CreatePostInfoUserContentComponent) createPostInfoUserContentComponent!: CreatePostInfoUserContentComponent;
   @ViewChild(CreateInfoPostContentComponent) createInfoPostContentComponent!: CreateInfoPostContentComponent;
+
   post: any;
+  district: any
+  department: any
+  country: any
 
   constructor(
     private dialog: MatDialog,
@@ -48,6 +55,9 @@ export class EditPostComponent implements OnInit {
   getPost(id: string): void {
     this.productsService.getProductById(id).subscribe((res: any) => {
       this.post = res;
+      this.country = { id:res.location.countryId, name: res.location.countryName};
+      this.department = {id:res.location.departmentId, name: res.location.departmentName};
+      this.district = {id:res.location.districtId, name: res.location.districtName};
     });
   }
 
@@ -59,29 +69,28 @@ export class EditPostComponent implements OnInit {
     this.createInfoPostContentComponent.uploadImage().then(uploaded => {
       const imageToSend = uploaded.length ? uploaded[0] : this.post.images[0];
 
-      this.productsService.getDistrictId(this.post.location.districtName)
-        .subscribe(districtId => {
-          const newProduct = {
-            name:               infoProduct.product_name,
-            description:        infoProduct.description,
-            desiredObject:      infoProduct.change_for,
-            price:              infoProduct.price,
-            image:              imageToSend,
-            boost:              contactProduct.boost,
-            available:          true,
-            productCategoryId:  Number(infoProduct.category_id),
-            userId:             Number(localStorage.getItem('id')),
-            districtId
-          };
+        const newProduct = {
+          name:               infoProduct.product_name,
+          description:        infoProduct.description,
+          desiredObject:      infoProduct.change_for,
+          price:              infoProduct.price,
+          image:              imageToSend,
+          boost:              contactProduct.boost,
+          available:          true,
+          productCategoryId:  Number(infoProduct.category_id),
+          userId:             Number(localStorage.getItem('id')),
+          districtId: 1
+        };
 
-          this.productsService
-            .putProduct(Number(this.post.id), newProduct)
-            .subscribe(() => this.successEdition());
-        });
-    });
+        this.productsService
+          .putProduct(Number(this.post.id), newProduct)
+          .subscribe(() => this.successEdition());
+      });
   }
   successEdition(): void {
     const ref = this.dialog.open(DialogSuccessfulProductEditionComponent, { disableClose: true });
     ref.afterClosed().subscribe(() => this.router.navigateByUrl('/profile/my-posts'));
   }
+
+  protected readonly parseInt = parseInt;
 }

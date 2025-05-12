@@ -72,7 +72,6 @@ export class CompleteExchangesComponent implements OnInit{
 
       this.reviewService.getReviewByAuthorAndExchange(this.userId.toString(),offer.id).subscribe((res) => {
         offer.reviewExisted = res.existReview;
-        console.log(offer);
       });
       });
     });

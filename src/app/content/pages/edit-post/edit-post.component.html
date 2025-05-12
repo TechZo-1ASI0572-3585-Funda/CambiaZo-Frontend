@@ -5,14 +5,14 @@
     <div class="section-1">
       <app-create-post-info-user-content class="section-info-contact"
                                          [boost]="post.boost"
-                                         [country]="post.location.countryName"
-                                         [department]="post.location.departmentName"
-                                           [city]="post.location.districtName"
+                                         [country]="country"
+                                         [department] ="department"
+                                           [district]="district"
       ></app-create-post-info-user-content>
       <button class="button-submit btn-desk" mat-stroked-button (click)="onPost()">Editar</button>
     </div>
     <app-create-info-post-content class="section-info-post"
-                                  [category_id]="post.category_id"
+                                  [category_id]="parseInt(post.category_id)"
                                   [product_name]="post.product_name"
                                   [description]="post.description"
                                   [change_for]="post.change_for"
