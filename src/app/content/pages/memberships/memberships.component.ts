@@ -99,20 +99,22 @@ export class MembershipsComponent implements OnInit {
 
       this.dialogLoginRegister.open(DialogPaypalComponent, {
         data: {
-          id: selected.id,
-          name: selected.name,
-          price: selected.price,
-          planId: selected.id,
-          userId: this.user.id,
+          id:            selected.id,
+          name:          selected.name,
+          price:         selected.price,
+          planId:        selected.id,
+          userId:        this.user!.id,
           subscriptionId: subscription.id
         },
         width: '400px',
         disableClose: false
-      }).afterClosed().subscribe(success => {
-        if (success) {
-          this.getMembershipCurrent();
-        }
-      });
+      })
+        .afterClosed()
+        .subscribe(result => {
+          if (result?.subscriptionUpdated) {
+            this.getMembershipCurrent();
+          }
+        });
     }
   }
 
