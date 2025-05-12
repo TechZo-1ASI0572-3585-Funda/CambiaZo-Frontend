@@ -22,8 +22,8 @@ export class OffersService {
     return this.http.get<Offers[]>(`${this.baseUrl}/api/v2/exchanges`, this.auth());
   }
 
-  updateOfferStatus(id: string, status: string): Observable<any> {
-    return this.http.put(`${this.baseUrl}/api/v2/exchanges/status/${id}`, { status }, this.auth());
+  updateOfferStatus(exchangeId: string, status: string): Observable<any> {
+    return this.http.put(`${this.baseUrl}/api/v2/exchanges/status/${exchangeId}`, { status }, this.auth());
   }
 
   postOffer(offer: Offers): Observable<Offers> {

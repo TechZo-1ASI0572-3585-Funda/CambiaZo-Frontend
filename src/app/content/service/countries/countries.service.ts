@@ -17,19 +17,19 @@ export class CountriesService {
 
   constructor(private http: HttpClient) {}
 
-  private getCountries(): Observable<Country[]> {
+  getCountries(): Observable<Country[]> {
     return this.http
       .get<Country[]>(`${this.baseUrl}/api/v2/countries`)
       .pipe(shareReplay(1));
   }
 
-  private getAllDepartments(): Observable<Department[]> {
+  getAllDepartments(): Observable<Department[]> {
     return this.http
       .get<Department[]>(`${this.baseUrl}/api/v2/departments`)
       .pipe(shareReplay(1));
   }
 
-  private getAllDistricts(): Observable<District[]> {
+  getAllDistricts(): Observable<District[]> {
     return this.http
       .get<District[]>(`${this.baseUrl}/api/v2/districts`)
       .pipe(shareReplay(1));
