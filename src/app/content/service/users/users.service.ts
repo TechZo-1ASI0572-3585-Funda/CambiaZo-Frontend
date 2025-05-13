@@ -28,7 +28,7 @@ export class UsersService {
   constructor(private http: HttpClient) {}
 
   login(data: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/api/v2/authentication/sign-in`, data).pipe(
+    return this.http.post(`${this.baseUrl}/api/v2/authentication/validate`, data).pipe(
       map((res: any) => {
         localStorage.setItem('token', res.token)
         localStorage.setItem('id', res.id)
@@ -47,7 +47,7 @@ export class UsersService {
   }
 
   verifyEmail(data: any): Observable<boolean> {
-    return this.http.get(`${this.baseUrl}/api/v2/authentication/sign-in`).pipe(
+    return this.http.get(`${this.baseUrl}/api/v2/authentication/validate`).pipe(
       map((res: any) => {
         const user_obj = res.find((user: any) => data.username === user.email);
         if (user_obj) {
