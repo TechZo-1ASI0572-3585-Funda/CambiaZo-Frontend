@@ -49,7 +49,7 @@ export class CreateInfoPostContentComponent implements OnInit {
     product_name: new FormControl<string | null>(null, Validators.required),
     description: new FormControl<string | null>(null, Validators.required),
     change_for: new FormControl<string | null>(null, Validators.required),
-    price: new FormControl<number | null>(null, Validators.required)
+    price: new FormControl<number | null>(null, Validators.required),
   })
 
   private cambiazoState: CambiazoStateService = inject(CambiazoStateService);
@@ -58,8 +58,6 @@ export class CreateInfoPostContentComponent implements OnInit {
   constructor(private storageService: FirebaseStorageService) {
     effect(() => {
       this.categories = this.cambiazoState.categoriesProducts();
-      console.log(this.categories)
-
     });
 
   }

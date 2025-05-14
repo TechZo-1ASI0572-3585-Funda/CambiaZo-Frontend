@@ -28,94 +28,27 @@ export class PostsService {
 
   getProducts(): Observable<Products[]> {
     return this.http.get<any[]>(`${this.baseUrl}/api/v2/products`).pipe(
-      switchMap(products =>
-        forkJoin(
-          products.map(product => {
-            const districtId = product.location?.districtId ?? product.districtId;
-
-            if (!districtId) {
-              return of(
-                this.transformProduct({
-                  product,
-                  country: null,
-                  department: null,
-                  district: null
-                })
-              );
-            }
-
-            const district$ =
-              this.districtCache.get(districtId) ||
-              this.http
-                .get<any>(`${this.baseUrl}/api/v2/districts/${districtId}`)
-                .pipe(shareReplay(1));
-            this.districtCache.set(districtId, district$);
-
-            return district$.pipe(
-              switchMap(district => {
-                const department$ =
-                  this.departmentCache.get(district.departmentId) ||
-                  this.http
-                    .get<any>(
-                      `${this.baseUrl}/api/v2/departments/${district.departmentId}`
-                    )
-                    .pipe(shareReplay(1));
-                this.departmentCache.set(district.departmentId, department$);
-
-                return department$.pipe(
-                  switchMap(department => {
-                    const country$ =
-                      this.countryCache.get(department.countryId) ||
-                      this.http
-                        .get<any>(
-                          `${this.baseUrl}/api/v2/countries/${department.countryId}`
-                        )
-                        .pipe(shareReplay(1));
-                    this.countryCache.set(department.countryId, country$);
-
-                    return forkJoin({
-                      product: of(product),
-                      country: country$,
-                      department: of(department),
-                      district: of(district)
-                    });
-                  }),
-                  map(details => this.transformProduct(details))
-                );
-              })
-            );
-          })
-        )
+      map(products =>
+        products.map(product => this.transformProduct({
+          product,
+          country: { name: product.location?.countryName },
+          department: { name: product.location?.departmentName },
+          district: { name: product.location?.districtName }
+        }))
       )
     );
   }
-  postProduct(data: any): Observable<any> {
-    const district = data.location.district;
-    if (!district) throw new Error('District is null or undefined');
 
-    return this.getDistrictId(district).pipe(
-      switchMap(districtId =>
-        this.http.post<any>(`${this.baseUrl}/api/v2/products`, {
-          name: data.product_name,
-          description: data.description,
-          desiredObject: data.change_for,
-          price: data.price,
-          image: data.images[0],
-          boost: data.boost,
-          available: true,
-          productCategoryId: data.category_id,
-          userId: data.user_id,
-          districtId
-        })
-      )
-    );
+
+  postProduct(data: any): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/api/v2/products`, data);
   }
 
   deleteProduct(id: number) {
     const token = localStorage.getItem('token');
     const headers = { Authorization: `Bearer ${token}` };
 
-    return this.http.delete(`${this.baseUrl}/products/delete/${id}`, { headers });
+    return this.http.delete(`${this.baseUrl}/api/v2/products/delete/${id}`, { headers });
   }
 
   putProduct(id: number, data: any): Observable<any> {

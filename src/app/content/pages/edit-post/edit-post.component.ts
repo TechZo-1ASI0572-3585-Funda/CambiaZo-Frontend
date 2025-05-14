@@ -79,7 +79,7 @@ export class EditPostComponent implements OnInit {
           available:          true,
           productCategoryId:  Number(infoProduct.category_id),
           userId:             Number(localStorage.getItem('id')),
-          districtId: 1
+          districtId: contactProduct.districtId,
         };
 
         this.productsService
