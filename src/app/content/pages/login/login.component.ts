@@ -38,18 +38,17 @@ export class LoginComponent {
   login(): void {
     this.showError = false;
     this.userService.login({ username: this.username, password: this.password }).subscribe((result: any) => {
-      if (typeof result === 'object' && result.token) {
-        localStorage.setItem('token', result.token);
+      if (typeof result === 'object' && result.id) {
         localStorage.setItem('id', result.id.toString());
-        window.location.href = '/home';
+        this.router.navigateByUrl('/home');
       } else if (result === 'password') {
         this.errorMessage = 'Contraseña incorrecta';
+        this.showError = true;
       } else if (result === 'user') {
         this.errorMessage = 'Usuario no encontrado';
+        this.showError = true;
       } else {
         this.errorMessage = 'Error al intentar iniciar sesión';
-      }
-      if (result !== true && typeof result !== 'object') {
         this.showError = true;
       }
     });
@@ -69,10 +68,9 @@ export class LoginComponent {
         const doLogin = () => {
           this.userService.login({ username: email, password }).subscribe({
             next: (response: any) => {
-              if (response && response.token && response.id) {
-                localStorage.setItem('token', response.token);
+              if (response && response.id) {
                 localStorage.setItem('id', response.id.toString());
-                window.location.href = '/home';
+                this.router.navigate(['/home']);
               } else {
                 this.showError = true;
                 this.errorMessage = 'No se recibió token o ID al iniciar sesión.';
