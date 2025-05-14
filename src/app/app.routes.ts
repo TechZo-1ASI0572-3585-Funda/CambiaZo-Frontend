@@ -48,7 +48,7 @@ export const routes: Routes = [
   { path: 'change-password', component: ChangePasswordComponent },
   { path: 'contact', component: ContactComponent },
   { path: 'help', component: AssistComponent },
-  { path: 'profile', component: OwnProfileComponent, canActivate:[authGuard], children: [
+  { path: 'profile', component: OwnProfileComponent, children: [
       { path: '', redirectTo: 'my-posts', pathMatch: 'full' },
       { path: 'my-posts', component: MyPostsComponent },
       { path: 'offers', component: UserOffersComponent },
@@ -57,7 +57,7 @@ export const routes: Routes = [
       { path: 'reviews', component: MyReviewsComponent },
     ]
   },
-  { path: 'profile/edit', component: EditProfileComponent, canActivate:[authGuard]},
+  { path: 'profile/edit', component: EditProfileComponent},
   { path: 'donations/:ong', component: OngDetailComponent },
   { path: 'home/:products', component: FilterProductsComponent },
   { path: 'product-information/:id', component: ProductDetailsComponent },
