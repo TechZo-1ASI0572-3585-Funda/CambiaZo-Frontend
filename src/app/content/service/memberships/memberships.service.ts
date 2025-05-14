@@ -80,5 +80,8 @@ export class MembershipsService {
     return this.http.get<any>(`${this.baseUrl}/api/v2/subscriptions/user/${userId}`, { headers: this.headers });
   }
 
+  createSubscription(payload: any): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/api/v2/subscriptions`, payload, { headers: this.headers });
+  }
 
 }

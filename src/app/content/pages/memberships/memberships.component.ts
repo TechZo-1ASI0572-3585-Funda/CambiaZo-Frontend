@@ -50,11 +50,11 @@ export class MembershipsComponent implements OnInit {
     this.getMembershipCurrent();
   }
 
-  getMembershipCurrent(){
+  getMembershipCurrent() {
     const userId = localStorage.getItem('id');
     if (userId) {
       this.membershipsService.getUserMembership(userId).subscribe((data) => {
-        this.membershipCurrent = data;
+        this.membershipCurrent = { ...data };
       });
     }
   }
@@ -95,26 +95,37 @@ export class MembershipsComponent implements OnInit {
       const selected = this.memberships.find(m => m.id === membershipId);
       if (!selected || !this.user) return;
 
-      const subscription = this.membershipCurrent;
+      const subscriptionPayload = {
+        state: 'active',
+        planId: selected.id,
+        userId: this.user.id
+      };
 
-      this.dialogLoginRegister.open(DialogPaypalComponent, {
-        data: {
-          id:            selected.id,
-          name:          selected.name,
-          price:         selected.price,
-          planId:        selected.id,
-          userId:        this.user!.id,
-          subscriptionId: subscription.id
+      this.membershipsService.createSubscription(subscriptionPayload).subscribe({
+        next: (response) => {
+          this.dialogLoginRegister.open(DialogPaypalComponent, {
+            data: {
+              id: selected.id,
+              name: selected.name,
+              price: selected.price,
+              planId: selected.id,
+              userId: this.user!.id,
+              subscriptionId: response.id
+            },
+            width: '400px',
+            disableClose: false
+          })
+            .afterClosed()
+            .subscribe(result => {
+              if (result?.subscriptionUpdated && selected) {
+                this.membershipCurrent = { ...this.membershipCurrent, plan: { ...selected } };
+              }
+            });
         },
-        width: '400px',
-        disableClose: false
-      })
-        .afterClosed()
-        .subscribe(result => {
-          if (result?.subscriptionUpdated) {
-            this.getMembershipCurrent();
-          }
-        });
+        error: (error) => {
+          console.error('Error creating subscription:', error);
+        }
+      });
     }
   }
 
