@@ -72,6 +72,6 @@ export const routes: Routes = [
   // { path: 'admin/products', component: ProductsAdminComponent },
   // { path: 'admin/memberships', component: MembershipsAdminComponent },
   // { path: 'admin/users', component: UsersAdminComponent },
-  // { path: '', pathMatch: 'full', redirectTo: 'home' },
-  // { path: '**', pathMatch: 'full', redirectTo: 'home' }
+  { path: '', pathMatch: 'full', redirectTo: 'home' },
+  { path: '**', pathMatch: 'full', redirectTo: 'home' }
 ];
