@@ -52,25 +52,25 @@ export class OngsService {
   }
 
   postOng(data: any): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/api/v2/ongs`, this.transformToNewStructure(data)).pipe(
+    return this.http.post<any>(`${this.baseUrl}/api/v2/donations/ongs`, this.transformToNewStructure(data)).pipe(
       catchError(this.handleError)
     );
   }
 
   deleteOng(id: string): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/api/v2/ongs/delete/${id}`).pipe(
+    return this.http.delete(`${this.baseUrl}/api/v2/donations/ongs/delete/${id}`).pipe(
       catchError(this.handleError)
     );
   }
 
   putOng(id: string, data: any): Observable<any> {
-    return this.http.put(`${this.baseUrl}/api/v2/ongs/edit/${id}`, this.transformToNewStructure(data)).pipe(
+    return this.http.put(`${this.baseUrl}/api/v2/donations/ongs/edit/${id}`, this.transformToNewStructure(data)).pipe(
       catchError(this.handleError)
     );
   }
 
   getOngById(id: string): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/api/v2/ongs/${id}`, this.withAuth()).pipe(
+    return this.http.get<any>(`${this.baseUrl}/api/v2/donations/ongs/${id}`, this.withAuth()).pipe(
       switchMap(ong =>
         forkJoin({
           projects: this.http
@@ -98,25 +98,25 @@ export class OngsService {
   /********************* Account Numbers **************************/
 
   postAccountNumber(data: any): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/api/v2/account-number`, data).pipe(
+    return this.http.post<any>(`${this.baseUrl}/api/v2/donations/account-number`, data).pipe(
       catchError(this.handleError)
     );
   }
 
   getAccountNumberById(id: string): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/api/v2/account-number/${id}`).pipe(
+    return this.http.get<any>(`${this.baseUrl}/api/v2/donations/account-number/${id}`).pipe(
       catchError(this.handleError)
     );
   }
 
   getAccountNumbersByOngId(ongId: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/api/v2/account-number/ongs/${ongId}`).pipe(
+    return this.http.get<any[]>(`${this.baseUrl}/api/v2/donations/account-number/ongs/${ongId}`).pipe(
       catchError(this.handleError)
     );
   }
 
   deleteAccountNumber(id: string): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/api/v2/account-number/delete/${id}`).pipe(
+    return this.http.delete(`${this.baseUrl}/api/v2/donations/account-number/delete/${id}`).pipe(
       catchError(this.handleError)
     );
   }
@@ -124,31 +124,31 @@ export class OngsService {
   /********************* Projects **************************/
 
   getProjects(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/api/v2/projects`).pipe(
+    return this.http.get<any[]>(`${this.baseUrl}/api/v2/donations/projects`).pipe(
       catchError(this.handleError)
     );
   }
 
   postProject(data: any): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/api/v2/projects`, data).pipe(
+    return this.http.post<any>(`${this.baseUrl}/api/v2/donations/projects`, data).pipe(
       catchError(this.handleError)
     );
   }
 
   getProjectById(id: string): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/api/v2/projects/${id}`).pipe(
+    return this.http.get<any>(`${this.baseUrl}/api/v2/donations/projects/${id}`).pipe(
       catchError(this.handleError)
     );
   }
 
   getProjectsByOngId(ongId: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/api/v2/projects/ongs/${ongId}`).pipe(
+    return this.http.get<any[]>(`${this.baseUrl}/api/v2/donations/projects/ongs/${ongId}`).pipe(
       catchError(this.handleError)
     );
   }
 
   deleteProject(id: string): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/api/v2/projects/delete/${id}`).pipe(
+    return this.http.delete(`${this.baseUrl}/api/v2/donations/projects/delete/${id}`).pipe(
       catchError(this.handleError)
     );
   }
@@ -156,31 +156,31 @@ export class OngsService {
   /********************* Social Networks **************************/
 
   getSocialNetworks(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/api/v2/social-networks`).pipe(
+    return this.http.get<any[]>(`${this.baseUrl}/api/v2/donations/social-networks`).pipe(
       catchError(this.handleError)
     );
   }
 
   postSocialNetwork(data: any): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/api/v2/social-networks`, data).pipe(
+    return this.http.post<any>(`${this.baseUrl}/api/v2/donations/social-networks`, data).pipe(
       catchError(this.handleError)
     );
   }
 
   getSocialNetworkById(id: string): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/api/v2/social-networks/${id}`).pipe(
+    return this.http.get<any>(`${this.baseUrl}/api/v2/donations/social-networks/${id}`).pipe(
       catchError(this.handleError)
     );
   }
 
   getSocialNetworksByOngId(ongId: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/api/v2/social-networks/ongs/${ongId}`).pipe(
+    return this.http.get<any[]>(`${this.baseUrl}/api/v2/donations/social-networks/ongs/${ongId}`).pipe(
       catchError(this.handleError)
     );
   }
 
   deleteSocialNetwork(id: string): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/api/v2/social-networks/delete/${id}`).pipe(
+    return this.http.delete(`${this.baseUrl}/api/v2/donations/social-networks/delete/${id}`).pipe(
       catchError(this.handleError)
     );
   }
